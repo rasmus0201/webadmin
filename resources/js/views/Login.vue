@@ -3,20 +3,20 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Log ind</div>
+                    <div class="card-header">Login</div>
 
                     <div class="card-body">
-                        <div class="login-form">
+                        <form class="login-form" @submit.prevent="submit()">
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">
                                     E-mail
                                 </label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="" required autocomplete="email" autofocus>
+                                    <input v-model="form.email" id="email" type="email" class="form-control" required autocomplete="email" autofocus>
 
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>error message</strong>
+                                        <strong>Error message</strong>
                                     </span>
                                 </div>
                             </div>
@@ -26,23 +26,29 @@
                                     Password
                                 </label>
 
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
+                                <div class="col-md-6 input-group">
+                                    <input v-model="form.password" id="password" :type="showPassword ? 'text' : 'password'" class="form-control" required autocomplete="current-password">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" @click="togglePasswordVisibility">
+                                            <fa-icon v-if="!showPassword" icon="eye-slash"/>
+                                            <fa-icon v-else icon="eye"/>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        Log ind
+                                        Login
                                     </button>
 
-                                    <a class="btn btn-link" href="/password/forgot">
-                                        Glemt adgangskode?
-                                    </a>
+                                    <router-link :to="{ name: 'password.forgot' }" class="btn btn-link">
+                                        Forgot password?
+                                    </router-link>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -51,7 +57,32 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import { LOGIN } from '../store/actions.type';
+
 export default {
-    name: "Login"
+    name: 'Login',
+    data() {
+        return {
+            form: {
+                email: '',
+                password: '',
+            },
+            showPassword: false
+        };
+    },
+    methods: {
+        ...mapActions({
+            login: `auth/${LOGIN}`
+        }),
+
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
+
+        submit() {
+            this.login(this.form);
+        }
+    }
 };
 </script>

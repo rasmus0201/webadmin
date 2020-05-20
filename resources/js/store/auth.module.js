@@ -13,7 +13,7 @@ const state = {
 };
 
 const getters = {
-    currentUser(state) {
+    user(state) {
         return state.user;
     },
     isAuthenticated(state) {
@@ -24,7 +24,7 @@ const getters = {
 const actions = {
     async [LOGIN](context, credentials) {
         return new Promise((resolve, reject) => {
-            ApiService.post("login", credentials)
+            ApiService.post("auth/login", credentials)
                 .then(response => response.data)
                 .then(result => {
                     if (!result.success || !result.data.user) {
@@ -44,7 +44,7 @@ const actions = {
     },
     async [LOGOUT](context) {
         return new Promise((resolve, reject) => {
-            ApiService.post("logout")
+            ApiService.post("auth/logout")
                 .then(({
                     response
                 }) => {
@@ -61,17 +61,12 @@ const actions = {
                 });
         });
     },
-    [CHECK_AUTH]({
-        commit,
-        state
-    }) {
+    [CHECK_AUTH]({ commit, state }) {
         if (state.isAuthenticated !== true) {
             commit(PURGE_AUTH);
         }
     },
-    [RESET_AUTH]({
-        commit
-    }) {
+    [RESET_AUTH]({ commit }) {
         commit(PURGE_AUTH);
     }
 };
@@ -88,6 +83,7 @@ const mutations = {
 };
 
 export default {
+    namespaced: true,
     state,
     actions,
     mutations,

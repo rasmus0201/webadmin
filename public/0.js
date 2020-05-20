@@ -15,8 +15,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "not-found"
+  name: "not-found",
+  methods: {
+    goBack: function goBack() {
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');
+    }
+  }
 });
 
 /***/ }),
@@ -36,7 +52,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    Side ikke fundet\n")])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("404 - Page not found")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("p", [
+              _vm._v("Unfortunately we couldn't find the requested URL.")
+            ]),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                attrs: { href: "/" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.goBack()
+                  }
+                }
+              },
+              [_vm._v("Go back")]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

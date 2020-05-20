@@ -1,0 +1,15 @@
+.app-content {
+    min-height: 100vh;
+    height: 0;
+}
+
+.footer {
+    padding: 1rem 0;
+    background: $gray-200;
+
+    &__text {
+        margin: 0;
+        color: $gray-600;
+        text-align: center;
+    }
+}

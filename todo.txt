@@ -1,4 +1,5 @@
 1. Auth (login)
+    -> With reCaptcha on login and request password
 2. Dashboard (admin panel + layout)
 3. Create new website
     -> Specify domain (url)

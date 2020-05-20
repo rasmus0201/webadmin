@@ -1,8 +1,8 @@
 <template>
     <div class="app-content d-flex flex-column">
         <Header />
-        <main class="container d-flex py-4">
-            <router-view :key="$route.path" class="flex-grow-1"></router-view>
+        <main class="d-flex py-4 flex-grow-1">
+            <router-view :key="$route.path"></router-view>
         </main>
         <Footer />
     </div>

@@ -1,11 +1,11 @@
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import { API_URL } from "./config";
-import store from "../store";
-import { RESET_AUTH } from "../store/actions.type";
-import router from "../router";
-import NotificationService from "./notification.service";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import { API_URL } from './config';
+import store from '../store';
+import { RESET_AUTH } from '../store/actions.type';
+import router from '../router';
+import NotificationService from './notification.service';
 
 const ApiService = {
     init() {
@@ -16,7 +16,7 @@ const ApiService = {
         this._setInterceptor();
     },
 
-    get(resource, slug = "") {
+    get(resource, slug = '') {
         return Vue.axios.get(`${resource}/${slug}`).catch(error => {
             throw new Error(`ApiService ${error}`);
         });
@@ -45,10 +45,10 @@ const ApiService = {
             response => response,
             error => {
                 // User not authenticated
-                if (error.response.status === 401 && store.getters["isAuthenticated"] === true) {
-                    store.dispatch(RESET_AUTH);
+                if (error.response.status === 401 && store.getters[`auth/${isAuthenticated}`] === true) {
+                    store.dispatch(`auth/${RESET_AUTH}`);
                     router.push({
-                        name: "home",
+                        name: 'home',
                         query: {}
                     });
                 }

@@ -1,7 +1,7 @@
 <template>
     <footer class="footer">
         <div class="container">
-            Footer
+            <p class="footer__text">&copy; Webadmin By Bunds</p>
         </div>
     </footer>
 </template>

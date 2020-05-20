@@ -11,8 +11,16 @@ import ApiService from "./common/api.service";
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Font awesome
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 // Register toast plugin
 Vue.use(Toasted);
+
+library.add([faEye, faEyeSlash]);
+Vue.component('fa-icon', FontAwesomeIcon);
 
 // Syncs the router with the state, making it possible to return state values with router params in it
 sync(store, router);
@@ -20,7 +28,7 @@ sync(store, router);
 ApiService.init();
 
 // Ensure we checked auth before each page load.
-router.beforeEach((to, from, next) => Promise.all([store.dispatch(CHECK_AUTH)]).then(next));
+router.beforeEach((to, from, next) => Promise.all([store.dispatch(`auth/${CHECK_AUTH}`)]).then(next));
 
 new Vue({
     router,

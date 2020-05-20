@@ -18,6 +18,11 @@ export default new Router({
             name: "login"
         },
         {
+            path: "/password/forgot",
+            component: () => import("../views/ForgotPassword"),
+            name: "password.forgot"
+        },
+        {
             path: "*",
             component: () => import("../views/404"),
             name: "not-found"
