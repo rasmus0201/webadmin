@@ -1,0 +1,16 @@
+1. Auth (login)
+2. Dashboard (admin panel + layout)
+3. Create new website
+    -> Specify domain (url)
+    -> Add nginx config
+    -> https with letsencrypt & cerbot
+    -> Add user for DB and create DB
+    -> Add root dir
+    -> Edit env configs
+    -> Services? Redis, Supervisor
+    -> Possibility to use CI with e.g. github
+
+4. Edit websites
+    -> Same options as when creating
+
+5. Backup website & databases
