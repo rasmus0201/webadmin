@@ -8,14 +8,10 @@ import { SET_AUTH, PURGE_AUTH } from './mutations.type';
 import ApiService from '../common/api.service';
 
 const state = {
-    user: {},
     isAuthenticated: false
 };
 
 const getters = {
-    user(state) {
-        return state.user;
-    },
     isAuthenticated(state) {
         return state.isAuthenticated;
     }
@@ -27,27 +23,28 @@ const actions = {
             ApiService.post('auth/login', credentials)
                 .then(response => response.data)
                 .then(result => {
-                    if (!result.success || !result.data.user) {
+                    if (!result.success) {
                         reject(result.message);
                         return;
                     }
 
-                    context.commit(SET_AUTH, result.data.user);
+                    context.commit(SET_AUTH);
                     resolve(result);
                 })
-                .catch(({ response }) => {
-                    reject(response);
+                .catch(error => {
+                    reject(error);
                 });
         });
     },
     async [LOGOUT](context) {
         return new Promise((resolve, reject) => {
             ApiService.post('auth/logout')
-                .then(({ response }) => {
-                    resolve(response.data);
+                .then(response => response.data)
+                .then(result => {
+                    resolve(result);
                 })
-                .catch(({ response }) => {
-                    reject(response);
+                .catch(error => {
+                    reject(error);
                 })
                 .finally(() => {
                     // We always need to reset frontend
@@ -66,13 +63,11 @@ const actions = {
 };
 
 const mutations = {
-    [SET_AUTH](state, user) {
+    [SET_AUTH](state) {
         state.isAuthenticated = true;
-        state.user = user;
     },
     [PURGE_AUTH](state) {
         state.isAuthenticated = false;
-        state.user = {};
     }
 };
 

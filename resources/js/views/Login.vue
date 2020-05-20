@@ -58,7 +58,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { LOGIN } from '../store/actions.type';
+import { LOGIN, FETCH_USER } from '../store/actions.type';
 
 export default {
     name: 'Login',
@@ -73,15 +73,23 @@ export default {
     },
     methods: {
         ...mapActions({
-            login: `auth/${LOGIN}`
+            login: `auth/${LOGIN}`,
+            fetchUser: `user/${FETCH_USER}`
         }),
 
         togglePasswordVisibility() {
             this.showPassword = !this.showPassword;
         },
 
-        submit() {
-            this.login(this.form);
+        async submit() {
+            try {
+                await this.login(this.form);
+                await this.fetchUser();
+            } catch (error) {
+                console.log(error);
+            }
+
+            await this.$router.push({ name: 'dashboard' });
         }
     }
 };

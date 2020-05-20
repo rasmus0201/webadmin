@@ -22,7 +22,7 @@
                         </template>
                         <template v-else>
                             <li class="nav-item dropdown">
-                                <router-link to="#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <router-link to="/#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{ user.name }} <span class="caret"></span>
                                 </router-link>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -47,7 +47,7 @@ export default {
     computed: {
         ...mapGetters({
             isAuthenticated: 'auth/isAuthenticated',
-            user: 'auth/user'
+            user: 'user/user'
         })
     }
 };

@@ -20,12 +20,11 @@ Route::prefix('v1')->group(function () {
         Route::post('refresh', 'AuthController@refresh');
 
         Route::group(['middleware' => 'auth:api'], function() {
-            Route::get('me', 'AuthController@me');
             Route::post('logout', 'AuthController@logout');
         });
     });
 
     Route::middleware('auth:api')->group(function() {
-
+        Route::get('user/me', 'UserController@index');
     });
 });

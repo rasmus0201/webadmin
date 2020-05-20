@@ -40,33 +40,23 @@ class AuthController extends Controller
     }
 
     /**
-     * Get user info
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return JsonResponse::success([
-            'user' => auth()->user()
-        ]);
-    }
-
-    /**
      * Handle refresh token
-     *
-     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        if (!$token = auth()->refresh()) {
+            return JsonResponse::error([], 'Could not generate new token', 401);
+        }
+
+        return $this->respondWithToken($token);
     }
 
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */

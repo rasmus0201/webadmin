@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { authGuard } from './guards';
+import { authGuard, guestGuard } from './guards';
+import store from '../store/index';
+import { LOGOUT } from '../store/actions.type';
 
 Vue.use(Router);
 
@@ -13,14 +15,30 @@ export default new Router({
             beforeEnter: authGuard
         },
         {
-            path: '/login',
-            component: () => import('../views/Login'),
-            name: 'login'
-        },
-        {
             path: '/password/forgot',
             component: () => import('../views/ForgotPassword'),
-            name: 'password.forgot'
+            name: 'password.forgot',
+            beforeEnter: guestGuard,
+        },
+        {
+            path: '/login',
+            component: () => import('../views/Login'),
+            name: 'login',
+            beforeEnter: guestGuard,
+        },
+        {
+            path: '/logout',
+            name: 'logout',
+            beforeEnter: async (to, from, next) => {
+                authGuard(to, from, next);
+
+                await store.dispatch(`user/${LOGOUT}`);
+                await store.dispatch(`auth/${LOGOUT}`);
+
+                return next({
+                    name: 'login'
+                });
+            }
         },
         {
             path: '*',
