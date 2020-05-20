@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\JsonResponse;
 use Closure;
 use Exception;
 use Illuminate\Contracts\Auth\Factory as Auth;
@@ -39,7 +40,7 @@ class Authenticate
         try {
             $this->authenticate($request, $guards);
         } catch (Exception $e) {
-            return response()->json(['error'=> $e->getMessage()]);
+            return JsonResponse::error([], $e->getMessage());
         }
 
         return $next($request);

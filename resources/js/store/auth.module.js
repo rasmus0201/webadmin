@@ -3,9 +3,9 @@ import {
     LOGOUT,
     CHECK_AUTH,
     RESET_AUTH
-} from "./actions.type";
-import { SET_AUTH, PURGE_AUTH } from "./mutations.type";
-import ApiService from "../common/api.service";
+} from './actions.type';
+import { SET_AUTH, PURGE_AUTH } from './mutations.type';
+import ApiService from '../common/api.service';
 
 const state = {
     user: {},
@@ -24,7 +24,7 @@ const getters = {
 const actions = {
     async [LOGIN](context, credentials) {
         return new Promise((resolve, reject) => {
-            ApiService.post("auth/login", credentials)
+            ApiService.post('auth/login', credentials)
                 .then(response => response.data)
                 .then(result => {
                     if (!result.success || !result.data.user) {
@@ -35,24 +35,18 @@ const actions = {
                     context.commit(SET_AUTH, result.data.user);
                     resolve(result);
                 })
-                .catch(({
-                    response
-                }) => {
+                .catch(({ response }) => {
                     reject(response);
                 });
         });
     },
     async [LOGOUT](context) {
         return new Promise((resolve, reject) => {
-            ApiService.post("auth/logout")
-                .then(({
-                    response
-                }) => {
+            ApiService.post('auth/logout')
+                .then(({ response }) => {
                     resolve(response.data);
                 })
-                .catch(({
-                    response
-                }) => {
+                .catch(({ response }) => {
                     reject(response);
                 })
                 .finally(() => {

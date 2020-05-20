@@ -75,8 +75,8 @@ class AuthController extends Controller
         $expires = auth()->factory()->getTTL();
 
         return JsonResponse::success([
-            'token_type' => 'bearer',
-            'expires_in' => $expires * 60
+            'tokenType' => 'bearer',
+            'expiresIn' => $expires * 60
         ])->withCookie(cookie(
             'token',
             $token,

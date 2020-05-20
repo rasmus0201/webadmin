@@ -27,7 +27,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "not-found",
+  name: 'not-found',
   methods: {
     goBack: function goBack() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/');

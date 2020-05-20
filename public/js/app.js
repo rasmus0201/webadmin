@@ -12043,7 +12043,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "App",
+  name: 'App',
   components: {
     Header: _components_Header__WEBPACK_IMPORTED_MODULE_0__["default"],
     Footer: _components_Footer__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -12070,7 +12070,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Footer"
+  name: 'Footer'
 });
 
 /***/ }),
@@ -12134,7 +12134,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Header",
+  name: 'Header',
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     isAuthenticated: 'auth/isAuthenticated',
     user: 'auth/user'
@@ -51006,7 +51006,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: function render(h) {
     return h(_App_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
   }
-}).$mount("#app");
+}).$mount('#app');
 
 /***/ }),
 
@@ -51098,7 +51098,7 @@ var ApiService = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API_URL", function() { return API_URL; });
-var API_URL = "/api/v1/";
+var API_URL = '/api/v1/';
 /* harmony default export */ __webpack_exports__["default"] = (API_URL);
 
 /***/ }),
@@ -51119,22 +51119,22 @@ var NOTIFICATION_DURATION = 5000;
 var NotificationService = {
   success: function success(message) {
     NotificationService.notify(message, {
-      type: "success"
+      type: 'success'
     });
   },
   info: function info(message) {
     NotificationService.notify(message, {
-      type: "info"
+      type: 'info'
     });
   },
   error: function error(message) {
     NotificationService.notify(message, {
-      type: "error"
+      type: 'error'
     });
   },
   notify: function notify(message, options) {
     var defaultOptions = {
-      type: "success",
+      type: 'success',
       duration: NOTIFICATION_DURATION
     };
     vue__WEBPACK_IMPORTED_MODULE_0___default.a.toasted.show(message, Object.assign({}, defaultOptions, options));
@@ -51299,7 +51299,7 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   next({
-    name: "login"
+    name: 'login'
   });
 });
 
@@ -51342,32 +51342,32 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  mode: "history",
+  mode: 'history',
   routes: [{
-    path: "/",
+    path: '/',
     component: function component() {
       return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ../views/Dashboard */ "./resources/js/views/Dashboard.vue"));
     },
-    name: "dashboard",
+    name: 'dashboard',
     beforeEnter: _guards__WEBPACK_IMPORTED_MODULE_2__["authGuard"]
   }, {
-    path: "/login",
+    path: '/login',
     component: function component() {
       return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ../views/Login */ "./resources/js/views/Login.vue"));
     },
-    name: "login"
+    name: 'login'
   }, {
-    path: "/password/forgot",
+    path: '/password/forgot',
     component: function component() {
       return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ../views/ForgotPassword */ "./resources/js/views/ForgotPassword.vue"));
     },
-    name: "password.forgot"
+    name: 'password.forgot'
   }, {
-    path: "*",
+    path: '*',
     component: function component() {
       return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ../views/404 */ "./resources/js/views/404.vue"));
     },
-    name: "not-found"
+    name: 'not-found'
   }]
 }));
 
@@ -51387,11 +51387,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGIN", function() { return LOGIN; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGOUT", function() { return LOGOUT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_USER", function() { return UPDATE_USER; });
-var CHECK_AUTH = "checkAuth";
-var RESET_AUTH = "resetAuth";
-var LOGIN = "login";
-var LOGOUT = "logout";
-var UPDATE_USER = "updateUser";
+var CHECK_AUTH = 'checkAuth';
+var RESET_AUTH = 'resetAuth';
+var LOGIN = 'login';
+var LOGOUT = 'logout';
+var UPDATE_USER = 'updateUser';
 
 /***/ }),
 
@@ -51441,7 +51441,7 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_type__WEBPACK_I
         switch (_context.prev = _context.next) {
           case 0:
             return _context.abrupt("return", new Promise(function (resolve, reject) {
-              _common_api_service__WEBPACK_IMPORTED_MODULE_3__["default"].post("auth/login", credentials).then(function (response) {
+              _common_api_service__WEBPACK_IMPORTED_MODULE_3__["default"].post('auth/login', credentials).then(function (response) {
                 return response.data;
               }).then(function (result) {
                 if (!result.success || !result.data.user) {
@@ -51471,7 +51471,7 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_type__WEBPACK_I
         switch (_context2.prev = _context2.next) {
           case 0:
             return _context2.abrupt("return", new Promise(function (resolve, reject) {
-              _common_api_service__WEBPACK_IMPORTED_MODULE_3__["default"].post("auth/logout").then(function (_ref2) {
+              _common_api_service__WEBPACK_IMPORTED_MODULE_3__["default"].post('auth/logout').then(function (_ref2) {
                 var response = _ref2.response;
                 resolve(response.data);
               })["catch"](function (_ref3) {
@@ -51539,7 +51539,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var vuexLocal = new vuex_persist__WEBPACK_IMPORTED_MODULE_2__["default"]({
   storage: window.localStorage,
-  modules: ["auth"]
+  modules: ['auth']
 });
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
@@ -51561,8 +51561,8 @@ var vuexLocal = new vuex_persist__WEBPACK_IMPORTED_MODULE_2__["default"]({
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PURGE_AUTH", function() { return PURGE_AUTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_AUTH", function() { return SET_AUTH; });
-var PURGE_AUTH = "logOut";
-var SET_AUTH = "setUser";
+var PURGE_AUTH = 'logOut';
+var SET_AUTH = 'setUser';
 
 /***/ }),
 

@@ -1,29 +1,29 @@
-import Vue from "vue";
+import Vue from 'vue';
 
 const NOTIFICATION_DURATION = 5000;
 
 const NotificationService = {
     success(message) {
         NotificationService.notify(message, {
-            type: "success"
+            type: 'success'
         });
     },
 
     info(message) {
         NotificationService.notify(message, {
-            type: "info"
+            type: 'info'
         });
     },
 
     error(message) {
         NotificationService.notify(message, {
-            type: "error"
+            type: 'error'
         });
     },
 
     notify(message, options) {
         const defaultOptions = {
-            type: "success",
+            type: 'success',
             duration: NOTIFICATION_DURATION
         };
 

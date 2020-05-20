@@ -34,7 +34,7 @@
 
 <script>
 export default {
-    name: "ForgotPassword",
+    name: 'ForgotPassword',
     methods: {
         submit() {
 

@@ -1,11 +1,11 @@
-import Vue from "vue";
-import { sync } from "vuex-router-sync";
-import Toasted from "vue-toasted";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import { CHECK_AUTH } from "./store/actions.type";
-import ApiService from "./common/api.service";
+import Vue from 'vue';
+import { sync } from 'vuex-router-sync';
+import Toasted from 'vue-toasted';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import { CHECK_AUTH } from './store/actions.type';
+import ApiService from './common/api.service';
 
 // Bootstrap
 import 'bootstrap';
@@ -34,4 +34,4 @@ new Vue({
     router,
     store,
     render: h => h(App)
-}).$mount("#app");
+}).$mount('#app');
