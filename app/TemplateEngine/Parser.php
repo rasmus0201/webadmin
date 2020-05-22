@@ -96,7 +96,7 @@ class Parser
             throw new \Exception('Location must be valid location', 1);
         }
 
-        fwrite($handle, $this->htmlParsed);
+        fwrite($handle, $this->parsed);
         fclose($handle);
 
         return true;
