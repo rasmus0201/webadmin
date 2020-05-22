@@ -41,10 +41,10 @@ class Nginx implements WebserverContract
         }
 
         exec("chmod 755 $location");
-        // if ($this->type === 'website') {
-        //     $enableLocation = str_replace('available', 'enabled', $location);
-        //     exec("ln -s {$location} {$enableLocation}");
-        // }
+        if ($this->type === 'website') {
+            $enableLocation = str_replace('available', 'enabled', $location);
+            exec("ln -s {$location} {$enableLocation}");
+        }
     }
 
     public function reload()
