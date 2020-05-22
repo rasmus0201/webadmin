@@ -1,21 +1,16 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Dashboard</div>
-
-                    <div class="card-body">
-                        Hello world!
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <page>
+        <v-card-title>
+            Dashboard
+        </v-card-title>
+        <v-card-text>
+            Hello there!
+        </v-card-text>
+    </page>
 </template>
 
 <script>
 export default {
-    name: 'Dashboard'
+    name: 'Dashboard',
 };
 </script>

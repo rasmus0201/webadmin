@@ -1,22 +1,36 @@
 <template>
-    <div class="app-content d-flex flex-column">
-        <Header />
-        <main class="d-flex py-4 flex-grow-1">
-            <router-view :key="$route.path"></router-view>
-        </main>
-        <Footer />
-    </div>
+    <v-app>
+        <v-navigation-drawer  v-if="isAuthenticated" v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+            <SidebarItems />
+        </v-navigation-drawer>
+
+        <Header @toggleDrawer="drawer = !drawer" />
+
+        <v-content>
+            <v-container class="fill-height align-items-start" fluid>
+                <router-view :key="$route.path"></router-view>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Header from './components/Header';
-import Footer from './components/Footer';
+import SidebarItems from './components/SidebarItems';
 
 export default {
-    name: 'App',
     components: {
         Header,
-        Footer
+        SidebarItems
+    },
+    computed: {
+        ...mapGetters({ isAuthenticated: 'auth/isAuthenticated' })
+    },
+    data() {
+        return {
+            drawer: true,
+        };
     }
-};
+}
 </script>

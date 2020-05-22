@@ -1,59 +1,39 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Login</div>
+    <page justify="center" :cols="6">
+        <v-card-title>
+            Login
+        </v-card-title>
+        <v-card-text>
+            <v-form ref="form" v-model="valid" lazy-validation>
+                <v-text-field
+                    v-model="form.email"
+                    :rules="rules.email"
+                    label="E-mail"
+                    required
+                    autofocus
+                    type="email"
+                ></v-text-field>
+                <v-text-field
+                    v-model="form.password"
+                    :rules="rules.password"
+                    label="Password"
+                    required
+                    :append-icon="showPassword ? '$vuetify.icons.fasEyeSlash' : '$vuetify.icons.fasEye'"
+                    @click:append="togglePasswordVisibility()"
+                    :type="showPassword ? 'text' : 'password'"
+                ></v-text-field>
+                <v-row class="mb-0">
+                    <v-col md="8">
+                        <v-btn @click="submit">Login</v-btn>
 
-                    <div class="card-body">
-                        <form class="login-form" @submit.prevent="submit()">
-                            <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">
-                                    E-mail
-                                </label>
-
-                                <div class="col-md-6">
-                                    <input v-model="form.email" id="email" type="email" class="form-control" required autocomplete="email" autofocus>
-
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>Error message</strong>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">
-                                    Password
-                                </label>
-
-                                <div class="col-md-6 input-group">
-                                    <input v-model="form.password" id="password" :type="showPassword ? 'text' : 'password'" class="form-control" required autocomplete="current-password">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" @click="togglePasswordVisibility">
-                                            <fa-icon v-if="!showPassword" icon="eye-slash"/>
-                                            <fa-icon v-else icon="eye"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Login
-                                    </button>
-
-                                    <router-link :to="{ name: 'password.forgot' }" class="btn btn-link">
-                                        Forgot password?
-                                    </router-link>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <router-link :to="{ name: 'password.forgot' }" class="btn btn-link">
+                            Forgot password?
+                        </router-link>
+                    </v-col>
+                </v-row>
+            </v-form>
+        </v-card-text>
+    </page>
 </template>
 
 <script>
@@ -64,11 +44,21 @@ export default {
     name: 'Login',
     data() {
         return {
+            showPassword: false,
+            valid: false,
             form: {
                 email: '',
                 password: '',
             },
-            showPassword: false
+            rules: {
+                email: [
+                    v => !!v || 'E-mail is required',
+                    v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                ],
+                password: [
+                    v => !!v || 'Password is required',
+                ],
+            }
         };
     },
     methods: {
@@ -82,6 +72,12 @@ export default {
         },
 
         async submit() {
+            this.$refs.form.validate();
+
+            if (!this.valid) {
+                return Promise.reject('Form is invalid');
+            }
+
             try {
                 await this.login(this.form);
                 await this.fetchUser();

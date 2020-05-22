@@ -1,42 +1,21 @@
 <template>
-    <header class="header">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <router-link :to="{ path: '/' }" class="navbar-brand">Webadmin</router-link>
-                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <template v-if="!isAuthenticated">
-                            <li class="nav-item">
-                                <router-link :to="{ name: 'login' }" class="nav-link">Log ind</router-link>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="nav-item dropdown">
-                                <router-link to="/#" id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ user.name }} <span class="caret"></span>
-                                </router-link>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <router-link :to="{ name: 'logout' }" class="dropdown-item">
-                                        Logout
-                                    </router-link>
-                                </div>
-                            </li>
-                        </template>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" color="blue darken-3" app dark>
+        <v-app-bar-nav-icon v-if="isAuthenticated" @click.stop="toggleNav()">
+            <v-icon class="v-app-bar__nav-icon">$vuetify.icons.fasBars</v-icon>
+        </v-app-bar-nav-icon>
+        <router-link class="toolbar-title-link" :to="{ path: '/' }">
+            <v-toolbar-title>
+                <span class="hidden-sm-and-down">Webadmin</span>
+            </v-toolbar-title>
+        </router-link>
+        <v-spacer></v-spacer>
+        <v-btn v-if="!isAuthenticated" icon :to="{ name: 'login' }">
+            <v-icon>$vuetify.icons.fasSignInAlt</v-icon>
+        </v-btn>
+        <v-btn v-else icon :to="{ name: 'logout' }">
+            <v-icon>$vuetify.icons.fasSignOutAlt</v-icon>
+        </v-btn>
+    </v-app-bar>
 </template>
 
 <script>
@@ -45,10 +24,12 @@ import { mapGetters } from 'vuex';
 export default {
     name: 'Header',
     computed: {
-        ...mapGetters({
-            isAuthenticated: 'auth/isAuthenticated',
-            user: 'user/user'
-        })
+        ...mapGetters({ isAuthenticated: 'auth/isAuthenticated' })
+    },
+    methods: {
+        toggleNav() {
+            this.$emit('toggleDrawer');
+        },
     }
 };
 </script>

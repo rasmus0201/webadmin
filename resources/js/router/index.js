@@ -41,8 +41,20 @@ export default new Router({
             }
         },
         {
+            path: '/websites',
+            component: () => import('../views/Websites'),
+            name: 'websites.index',
+            beforeEnter: authGuard
+        },
+        {
+            path: '/databases',
+            component: () => import('../views/Databases'),
+            name: 'databases.index',
+            beforeEnter: authGuard
+        },
+        {
             path: '*',
-            component: () => import('../views/404'),
+            component: () => import('../views/NotFound'),
             name: 'not-found'
         }
     ]

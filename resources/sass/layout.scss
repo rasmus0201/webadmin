@@ -1,15 +1,11 @@
-.app-content {
-    min-height: 100vh;
-    height: 0;
+.v-page {
+    width: 100%;
 }
 
-.footer {
-    padding: 1rem 0;
-    background: $gray-200;
+.toolbar-title-link {
+    color: $white !important;
 
-    &__text {
-        margin: 0;
-        color: $gray-600;
-        text-align: center;
+    &:hover {
+        text-decoration: none;
     }
 }
