@@ -49,7 +49,7 @@ class Nginx implements WebserverContract
 
     public function reload()
     {
-        exec('service nginx reload');
+        exec('systemctl reload nginx');
     }
 
     public function getWebsiteConfigPath($domain)
