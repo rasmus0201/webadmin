@@ -69,19 +69,21 @@ class CreateWebsiteCommand extends Command
 
         $webserver = new $this->drivers[$driver]();
 
-        // Genereate SSL certicate & save it
-        if ($this->option('secure')) {
-            $webserver->createSSLCertificate($domain, $email);
-        }
-
         // Generate virtual host for domain
-        $webserver->createWebsite(
+        $vHost = $webserver->createVirtualHost(
             $template,
             $webserver->getWebsiteConfigPath($domain),
             [
                 WebserverContract::DOMAIN => $domain
             ]
         );
+
+        // Genereate SSL certicate & save it
+        // if ($this->option('secure')) {
+        //     $webserver->createSSLCertificate($domain, $email);
+        // }
+
+        $webserver->createRootDirectory($vHost);
 
         $webserver->reload();
     }

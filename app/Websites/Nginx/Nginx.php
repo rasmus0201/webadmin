@@ -3,22 +3,26 @@
 namespace App\Websites\Nginx;
 
 use App\TemplateEngine\Parser;
+use App\Websites\Contracts\ConfigParserContract;
 use App\Websites\Contracts\WebserverContract;
+use App\Websites\Nginx\ConfigParser\Config;
 
 class Nginx implements WebserverContract
 {
-    public function createWebsite($template, $location, $data)
+    public function createVirtualHost($template, $location, $data)
     {
         $parser = new Parser($template);
         $parser->render($data);
 
-        if (!$parser->asFile($location)) {
-            return;
-        }
+        // if (!$parser->asFile($location)) {
+        //     return;
+        // }
+        //
+        // $enableLocation = str_replace('available', 'enabled', $location);
+        // exec("chmod 755 $location");
+        // exec("ln -sf $location $enableLocation");
 
-        $enableLocation = str_replace('available', 'enabled', $location);
-        exec("chmod 755 $location");
-        exec("ln -sf $location $enableLocation");
+        return Config::createFromString($parser->asString());
     }
 
     public function createSnippet($template, $location)
@@ -31,6 +35,21 @@ class Nginx implements WebserverContract
         }
 
         exec("chmod 755 $location");
+
+        return Config::createFromString($parser->asString());
+    }
+
+    public function createRootDirectory(ConfigParserContract $vHost)
+    {
+        if (!isset($vHost['server']) && !isset($vHost['server']['root'])) {
+            throw new \RuntimeException("The index \$vHost['server']['root'] must be set.");
+        }
+
+        $rootPath = $vHost['server']['root']->parametersAsString();
+
+        if (!file_exists($rootPath)) {
+            mkdir($rootPath, 0755, true);
+        }
     }
 
     public function getWebsiteConfigPath($domain)
