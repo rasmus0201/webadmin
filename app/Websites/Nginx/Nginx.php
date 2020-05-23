@@ -7,54 +7,47 @@ use App\Websites\Contracts\WebserverContract;
 
 class Nginx implements WebserverContract
 {
-    private $template;
-    private $parser;
-    private $type;
-
-    public function template($template)
+    public function createWebsite($template, $location, $data)
     {
-        $this->template = $template;
+        $parser = new Parser($template);
+        $parser->render($data);
 
-        return $this;
+        if (!$parser->asFile($location)) {
+            return;
+        }
+
+        $enableLocation = str_replace('available', 'enabled', $location);
+        exec("chmod 755 $location");
+        exec("ln -s $location $enableLocation");
     }
 
-    public function createWebsite($data)
+    public function createSnippet($template, $location)
     {
-        $parser = new Parser($this->template);
+        $parser = new Parser($template);
+        $parser->render($data);
 
-        $this->parser = $parser->render($data);
-        $this->type = 'website';
-    }
-
-    public function createSnippet()
-    {
-        $parser = new Parser($this->template);
-
-        $this->parser = $parser->render();
-        $this->type = 'snippet';
-    }
-
-    public function save($location)
-    {
-        if (!$this->parser->asFile($location)) {
+        if (!$parser->asFile($location)) {
             return;
         }
 
         exec("chmod 755 $location");
-        if ($this->type === 'website') {
-            $enableLocation = str_replace('available', 'enabled', $location);
-            exec("ln -s $location $enableLocation");
-        }
-    }
-
-    public function reload()
-    {
-        exec('systemctl reload nginx');
     }
 
     public function getWebsiteConfigPath($domain)
     {
         $domain = escapeshellcmd($domain);
         return "/etc/nginx/sites-available/{$domain}.conf";
+    }
+
+    public function createSSLCertificate($domain, $registrantEmail)
+    {
+        $safeDomain = escapeshellarg($domain);
+        $safeMail = escapeshellarg($registrantEmail);
+        exec("certbot --agree-tos -n --nginx -d $safeDomain -d www.$safeDomain -m $safeMail");
+    }
+
+    public function reload()
+    {
+        exec('systemctl reload nginx');
     }
 }

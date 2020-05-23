@@ -6,9 +6,9 @@ interface WebserverContract
 {
     const DOMAIN = 'DOMAIN';
 
-    public function template($template);
-    public function createWebsite($data);
-    public function createSnippet();
-    public function save($location);
+    public function createWebsite($template, $location, $data);
+    public function createSnippet($template, $location);
     public function getWebsiteConfigPath($domain);
+    public function createSSLCertificate($domain, $registrantEmail);
+    public function reload();
 }

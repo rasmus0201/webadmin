@@ -16,6 +16,7 @@ class CreateWebsiteCommand extends Command
     protected $signature = 'website:make
                         {--driver=nginx}
                         {--secure : Whether or not too generate SSL certifcate & config}
+                        {--email= : Email for registering with external services}
                         {--domain= : The domain of the website}
                         {--template= : Template to the driver}';
 
@@ -60,21 +61,28 @@ class CreateWebsiteCommand extends Command
 
         $domain = $this->option('domain');
         $template = $this->option('template');
+        $email = $this->option('email');
 
-        if (empty($domain) || empty($template)) {
-            throw new \RuntimeException("Both --domain and --template is required.");
+        if (empty($domain) || empty($template) || empty($email)) {
+            throw new \RuntimeException("Both --domain, --template and --email is required.");
         }
 
         $webserver = new $this->drivers[$driver]();
 
-        $webserver->template($template);
-        $webserver->createWebsite([
-            WebserverContract::DOMAIN => $domain
-        ]);
-
         // Genereate SSL certicate & save it
+        if ($this->option('secure')) {
+            $webserver->createSSLCertificate($domain, auth()->user()->email);
+        }
 
-        $webserver->save($webserver->getWebsiteConfigPath($domain));
+        // Generate virtual host for domain
+        $webserver->createWebsite(
+            $template,
+            $webserver->getWebsiteConfigPath($domain)
+            [
+                WebserverContract::DOMAIN => $domain
+            ]
+        );
+
         $webserver->reload();
     }
 }
