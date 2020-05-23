@@ -15,6 +15,7 @@ class CreateWebsiteCommand extends Command
      */
     protected $signature = 'website:make
                         {--driver=nginx}
+                        {--secure : Whether or not too generate SSL certifcate & config}
                         {--domain= : The domain of the website}
                         {--template= : Template to the driver}';
 
@@ -70,6 +71,8 @@ class CreateWebsiteCommand extends Command
         $webserver->createWebsite([
             WebserverContract::DOMAIN => $domain
         ]);
+
+        // Genereate SSL certicate & save it
 
         $webserver->save($webserver->getWebsiteConfigPath($domain));
         $webserver->reload();

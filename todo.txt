@@ -1,4 +1,5 @@
 1. Auth (login)
+    -> Request password reset
     -> With reCaptcha on login and request password
 2. Dashboard (admin panel + layout)
 3. Create new website
@@ -9,7 +10,7 @@
     -> Add root dir
     -> Edit env configs
     -> Services? Redis, Supervisor
-    -> Possibility to use CI with e.g. github
+    -> Possibility to use CI/CD with e.g. github
 
 4. Edit websites
     -> Same options as when creating
