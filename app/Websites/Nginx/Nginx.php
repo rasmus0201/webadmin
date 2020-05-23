@@ -45,7 +45,7 @@ class Nginx implements WebserverContract
         $safeMail = escapeshellarg($registrantEmail);
         $iniFile = escapeshellarg(base_path('digitalocean.ini'));
         $lastLine = exec(
-            "certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain",
+            "certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain 2>&1",
             $retArr,
             $retVal
         );
