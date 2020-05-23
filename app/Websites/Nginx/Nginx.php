@@ -14,13 +14,13 @@ class Nginx implements WebserverContract
         $parser = new Parser($template);
         $parser->render($data);
 
-        // if (!$parser->asFile($location)) {
-        //     return;
-        // }
-        //
-        // $enableLocation = str_replace('available', 'enabled', $location);
-        // exec("chmod 755 $location");
-        // exec("ln -sf $location $enableLocation");
+        if (!$parser->asFile($location)) {
+            return;
+        }
+
+        $enableLocation = str_replace('available', 'enabled', $location);
+        exec("chmod 755 $location");
+        exec("ln -sf $location $enableLocation");
 
         return Config::createFromString($parser->asString());
     }

@@ -79,9 +79,9 @@ class CreateWebsiteCommand extends Command
         );
 
         // Genereate SSL certicate & save it
-        // if ($this->option('secure')) {
-        //     $webserver->createSSLCertificate($domain, $email);
-        // }
+        if ($this->option('secure')) {
+            $webserver->createSSLCertificate($domain, $email);
+        }
 
         $webserver->createRootDirectory($vHost);
 
