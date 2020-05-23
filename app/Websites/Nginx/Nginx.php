@@ -18,7 +18,7 @@ class Nginx implements WebserverContract
 
         $enableLocation = str_replace('available', 'enabled', $location);
         exec("chmod 755 $location");
-        exec("ln -s $location $enableLocation");
+        exec("ln -sf $location $enableLocation");
     }
 
     public function createSnippet($template, $location)
@@ -46,7 +46,7 @@ class Nginx implements WebserverContract
         $iniFile = escapeshellarg(base_path('digitalocean.ini'));
 
         // First delete any current certifcate
-        exec("certbot delete --cert-name $safeDomain", $retArr);
+        exec("certbot delete --cert-name $safeDomain 2>&1", $retArr);
 
         // Then create new certifcate
         $lastLine = exec(
