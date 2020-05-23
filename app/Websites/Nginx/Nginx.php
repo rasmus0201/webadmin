@@ -43,7 +43,8 @@ class Nginx implements WebserverContract
     {
         $safeDomain = escapeshellarg($domain);
         $safeMail = escapeshellarg($registrantEmail);
-        exec("certbot --agree-tos -n --nginx -d $safeDomain -d www.$safeDomain -m $safeMail");
+        $iniFile = escapeshellarg(base_path('digitalocean.ini'));
+        exec("certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain");
     }
 
     public function reload()
