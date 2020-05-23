@@ -71,13 +71,13 @@ class CreateWebsiteCommand extends Command
 
         // Genereate SSL certicate & save it
         if ($this->option('secure')) {
-            $webserver->createSSLCertificate($domain, auth()->user()->email);
+            $webserver->createSSLCertificate($domain, $email);
         }
 
         // Generate virtual host for domain
         $webserver->createWebsite(
             $template,
-            $webserver->getWebsiteConfigPath($domain)
+            $webserver->getWebsiteConfigPath($domain),
             [
                 WebserverContract::DOMAIN => $domain
             ]
