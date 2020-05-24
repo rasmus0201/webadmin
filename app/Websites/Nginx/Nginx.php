@@ -65,11 +65,11 @@ class Nginx implements WebserverContract
         $iniFile = escapeshellarg(base_path('digitalocean.ini'));
 
         // First delete any current certifcate
-        exec("certbot delete --cert-name $safeDomain 2>&1", $retArr);
+        exec("sudo certbot delete --cert-name $safeDomain 2>&1", $retArr);
 
         // Then create new certifcate
         $lastLine = exec(
-            "certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain 2>&1",
+            "sudo certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain 2>&1",
             $retArr,
             $retVal
         );
@@ -81,6 +81,6 @@ class Nginx implements WebserverContract
 
     public function reload()
     {
-        exec('systemctl reload nginx');
+        exec('sudo /etc/init.d/nginx reload');
     }
 }
