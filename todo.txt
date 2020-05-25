@@ -16,3 +16,6 @@
     -> Same options as when creating
 
 5. Backup website & databases
+
+
+NOTE: https://github.com/MagePsycho/nginx-virtual-host-bash-script
