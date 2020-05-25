@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cp .env.example .env
+php artisan key:generate
+composer install
+
 sudo groupadd webadmin
 sudo usermod -a -G webadmin www-data
 

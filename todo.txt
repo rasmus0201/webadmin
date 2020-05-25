@@ -5,7 +5,7 @@
 3. Create new website
     -> Specify domain (url)
     -> Add nginx config
-    -> https with letsencrypt & cerbot
+    -> https with letsencrypt & certbot
     -> Add user for DB and create DB
     -> Add root dir
     -> Edit env configs
@@ -19,3 +19,31 @@
 
 
 NOTE: https://github.com/MagePsycho/nginx-virtual-host-bash-script
+
+NOTE:
+    Create new DB user:
+    CREATE USER 'USERNAME'@'localhost' IDENTIFIED BY 'PASSWORD';
+    GRANT ALTER,
+    ALTER ROUTINE,
+    CREATE,
+    CREATE ROUTINE,
+    CREATE TEMPORARY TABLES,
+    CREATE VIEW,
+    DELETE,
+    DROP,
+    EVENT,
+    EXECUTE,
+    INDEX,
+    INSERT,
+    LOCK TABLES,
+    REFERENCES,
+    SELECT,
+    SHOW VIEW,
+    TRIGGER,
+    UPDATE
+    ON DATABASE.* TO 'USERNAME'@'localhost';
+    FLUSH PRIVILEGES;
+
+    Delete user:
+    REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'USERNAME'@'localhost';
+    DROP USER 'USERNAME'@'localhost';
