@@ -21,6 +21,13 @@
 NOTE: https://github.com/MagePsycho/nginx-virtual-host-bash-script
 
 NOTE:
+certbot certonly --dns-digitalocean --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini -m xxr@live.dk -d test3.rasmusbundsgaard.dk -d www.test3.rasmusbundsgaard.dk
+
+The following error was encountered:
+[Errno 13] Permission denied: '/var/log/letsencrypt/.certbot.lock'
+Either run as root, or set --config-dir, --work-dir, and --logs-dir to writeable paths.
+
+NOTE:
     Create new DB user:
     CREATE USER 'USERNAME'@'localhost' IDENTIFIED BY 'PASSWORD';
     GRANT ALTER,
@@ -47,3 +54,16 @@ NOTE:
     Delete user:
     REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'USERNAME'@'localhost';
     DROP USER 'USERNAME'@'localhost';
+
+
+
+https://xyrillian.de/thoughts/posts/how-i-run-certbot.html
+    addgroup --system letsencrypt
+    adduser --system --home=/var/lib/letsencrypt --ingroup=letsencrypt letsencrypt
+
+    chown -R letsencrypt:letsencrypt /etc/letsencrypt
+    chown -R letsencrypt:letsencrypt /var/lib/letsencrypt
+    chown -R letsencrypt:letsencrypt /var/log/letsencrypt && chmod -R 0700 /var/log/letsencrypt
+    chown letsencrypt:letsencrypt /var/www/webadmin/digitalocean.ini && chmod 0700 /var/www/webadmin/digitalocean.ini
+
+    sudo -u letsencrypt -g letsencrypt certbot certonly --dns-digitalocean --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini -m xxr@live.dk -d test3.rasmusbundsgaard.dk -d www.test3.rasmusbundsgaard.dk
