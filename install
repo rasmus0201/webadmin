@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo groupadd webadmin
+sudo usermod -a -G webadmin www-data
+
+gcc -o ./bin/webserver_manager ./webserver_manager.c
+sudo chmod 4511 ./bin/webserver_manager
+sudo chown root:root ./bin/webserver_manager
