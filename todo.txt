@@ -68,3 +68,26 @@ https://xyrillian.de/thoughts/posts/how-i-run-certbot.html
     chown letsencrypt:letsencrypt /var/www/webadmin/digitalocean.ini && chmod 0700 /var/www/webadmin/digitalocean.ini
 
     sudo -u letsencrypt -g letsencrypt certbot certonly --dns-digitalocean --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini -m xxr@live.dk -d test3.rasmusbundsgaard.dk -d www.test3.rasmusbundsgaard.dk
+
+
+    certbot certonly \
+        --non-interactive \
+        --dns-digitalocean \
+        --agree-tos \
+        --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini \
+        --config-dir=/var/letsencrypt/config/ --work-dir=/var/letsencrypt/work/ --logs-dir=/var/letsencrypt/logs/ \
+        -m xxr@live.dk \
+        --domain test4.rasmusbundsgaard.dk \
+        --domain www.test4.rasmusbundsgaard.dk \
+        --dry-run
+
+
+    ./certbot_manager certonly \
+        --non-interactive \
+        --dns-digitalocean \
+        --agree-tos \
+        --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini \
+        -m xxr@live.dk \
+        --domain test1.rasmusbundsgaard.dk \
+        --domain www.test1.rasmusbundsgaard.dk \
+        --dry-run
