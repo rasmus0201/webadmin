@@ -1,12 +1,12 @@
 #!/bin/bash
 
-cp .env.example .env
-php artisan key:generate
-composer install
-
 # Add webadmin group
 sudo groupadd webadmin
 sudo usermod -a -G webadmin www-data
+
+sudo -u www-data -g webadmin cp .env.example .env
+sudo -u www-data -g webadmin php artisan key:generate
+sudo -u www-data -g webadmin composer install
 
 # Webserver manager - to gain privileged access to www-data
 gcc -o ./bin/webserver_manager ./webserver_manager.c
