@@ -11,8 +11,26 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-struct passwd* getUser();
-bool file_exists(char *filename);
+struct passwd* getUser() {
+    register struct passwd *pw;
+    register uid_t uid;
+    int c;
+
+    uid = geteuid();
+    pw = getpwuid(uid);
+
+    if (pw) {
+        return pw;
+    }
+
+    fprintf(stderr, "Cannot find username for UID %u\n", (unsigned) uid);
+    exit (EXIT_FAILURE);
+}
+
+bool file_exists(char *filename) {
+    struct stat buffer;
+    return (stat(filename, &buffer) == 0);
+}
 
 int main(int argc, char **argv) {
     setuid(0);
@@ -119,25 +137,4 @@ int main(int argc, char **argv) {
     }
 
     return EXIT_SUCCESS;
-}
-
-struct passwd* getUser() {
-    register struct passwd *pw;
-    register uid_t uid;
-    int c;
-
-    uid = geteuid();
-    pw = getpwuid(uid);
-
-    if (pw) {
-        return pw;
-    }
-
-    fprintf(stderr, "Cannot find username for UID %u\n", (unsigned) uid);
-    exit (EXIT_FAILURE);
-}
-
-bool file_exists(char *filename) {
-    struct stat buffer;
-    return (stat(filename, &buffer) == 0);
 }
