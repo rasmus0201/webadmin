@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Websites\Commands\CreateWebsiteCommand::class
+        \App\Websites\Commands\CreateWebsiteCommand::class,
+        \App\Websites\Commands\CreateLetsencryptCertificateCommand::class,
+        \App\Websites\Commands\DeleteLetsencryptCertificateCommand::class,
     ];
 
     /**
