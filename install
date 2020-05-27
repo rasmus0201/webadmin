@@ -4,10 +4,6 @@
 sudo groupadd webadmin
 sudo usermod -a -G webadmin www-data
 
-sudo -u www-data -g webadmin cp .env.example .env
-sudo -u www-data -g webadmin php artisan key:generate
-sudo -u www-data -g webadmin composer install
-
 # Webserver manager - to gain privileged access to www-data
 gcc -o ./bin/webserver_manager ./webserver_manager.c
 sudo chown root:root ./bin/webserver_manager
@@ -18,6 +14,10 @@ gcc -o ./bin/certbot_manager ./certbot_manager.c
 sudo chown root:root ./bin/certbot_manager
 sudo chmod 4511 ./bin/certbot_manager
 
+# Install dependencies for webadmin + publish .env
+sudo -u www-data -g webadmin composer install
+sudo -u www-data -g webadmin cp .env.example .env
+sudo -u www-data -g webadmin php artisan key:generate
 
 
 # sudo -u root -g webadmin mkdir /var/letsencrypt
