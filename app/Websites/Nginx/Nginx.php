@@ -7,6 +7,7 @@ use App\Websites\Contracts\ConfigParserContract;
 use App\Websites\Contracts\WebserverContract;
 use App\Websites\Nginx\ConfigParser\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class Nginx implements WebserverContract
 {
@@ -91,6 +92,24 @@ class Nginx implements WebserverContract
     {
         $domain = escapeshellcmd($domain);
         return "/etc/nginx/sites-available/{$domain}.conf";
+    }
+
+    public function getVirtualHostName($domain)
+    {
+        $domain = preg_replace('/[^\p{L}\d\.-]+/u', '', $domain);
+
+        while (Str::startsWith($domain, ['.', '-'])) {
+            $domain = Str::substr($domain, 1);
+        }
+
+        while (Str::contains($domain, '..')) {
+            $domain = Str::replaceFirst('..', '.', $domain);
+        }
+
+        $domain = Str::ascii($domain);
+        $domain = "{$domain}.conf";
+
+        return $domain;
     }
 
     public function reload()

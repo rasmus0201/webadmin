@@ -72,7 +72,7 @@ class CreateWebsiteCommand extends Command
         // Generate virtual host for domain
         $vHost = $webserver->createVirtualHost(
             $template,
-            $webserver->getWebsiteConfigPath($domain),
+            $webserver->getVirtualHostName($domain),
             [
                 WebserverContract::DOMAIN => $domain
             ]
