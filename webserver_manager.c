@@ -24,7 +24,7 @@ struct passwd* getUser() {
     }
 
     fprintf(stderr, "Cannot find username for UID %u\n", (unsigned) uid);
-    exit (EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 bool file_exists(char *filename) {
@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
     setuid(0);
 
     if (argc < 3) {
+        printf("This binary requires at least 2 arguments!");
         return EXIT_FAILURE;
     }
 
@@ -48,6 +49,7 @@ int main(int argc, char **argv) {
 
     // Don't allow relative paths (should also be able to hanlde ../ paths)
     if (strstr(vHostFileName, "./") != NULL) {
+        printf("'./' is not allowed for the name!");
         return EXIT_FAILURE;
     }
 
@@ -56,6 +58,7 @@ int main(int argc, char **argv) {
     register struct passwd *user = getUser(); // Should be root user
 
     if (user->pw_uid != 0) {
+        printf("User must be root!");
         return EXIT_FAILURE;
     }
 
@@ -133,6 +136,7 @@ int main(int argc, char **argv) {
     } else if (strcmp(action, "test") == 0) {
         system("nginx -t");
     } else {
+        printf("Action '%s' not available\n", action);
         return EXIT_FAILURE;
     }
 
