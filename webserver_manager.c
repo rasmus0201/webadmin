@@ -11,26 +11,8 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-struct passwd* getUser() {
-    register struct passwd *pw;
-    register uid_t uid;
-    int c;
-
-    uid = geteuid();
-    pw = getpwuid(uid);
-
-    if (pw) {
-        return pw;
-    }
-
-    fprintf(stderr, "Cannot find username for UID %u\n", (unsigned) uid);
-    exit (EXIT_FAILURE);
-}
-
-bool file_exists(char *filename) {
-    struct stat buffer;
-    return (stat(filename, &buffer) == 0);
-}
+struct passwd* getUser();
+bool file_exists(char *filename);
 
 int main(int argc, char **argv) {
     setuid(0);
@@ -43,6 +25,7 @@ int main(int argc, char **argv) {
     char *vHostFileName = strtok(argv[2], " ");
     char *webserverConfigPath = "/etc/nginx/";
     char availablePath[] = "sites-available/";
+    char snippetsPath[] = "snippets/";
     char enabledPath[] = "sites-enabled/";
 
     // Don't allow relative paths (should also be able to hanlde ../ paths)
@@ -70,9 +53,15 @@ int main(int argc, char **argv) {
     strcat(absoluteEnabledPath, enabledPath);
     strcat(absoluteEnabledPath, vHostFileName);
 
-    if (strcmp(action, "enable") == 0) {
+    // Build path to snippets
+    char absoluteSnippetPath[strlen(webserverConfigPath) + strlen(snippetsPath) + strlen(vHostFileName)];
+    strcpy(absoluteSnippetPath, webserverConfigPath);
+    strcat(absoluteSnippetPath, snippetsPath);
+    strcat(absoluteSnippetPath, vHostFileName);
+
+    if (strcmp(action, "create") == 0) {
         if (argc != 4) {
-            printf("%s\n", "When using the enable action, you should specify 3rd parameter tmpLocation for a file to copy from.");
+            printf("%s\n", "When using the create action, you should specify 3rd parameter tmpLocation for a file to copy from.");
             return EXIT_FAILURE;
         }
 
@@ -88,7 +77,34 @@ int main(int argc, char **argv) {
 
         chown(absoluteAvailablePath, user->pw_uid, user->pw_gid);
         chmod(absoluteAvailablePath, permissions);
-    } else if (strcmp(action, "disable") == 0) {
+    } else if (strcmp(action, "create-snippet") == 0) {
+        if (argc != 4) {
+            printf("%s\n", "When using the create-snippet action, you should specify 3rd parameter tmpLocation for a file to copy from.");
+            return EXIT_FAILURE;
+        }
+
+        printf("Attempting to store snippet at '%s'\n", absoluteSnippetPath);
+
+        char *tmpLocation = strtok(argv[3], " ");
+
+        rename(tmpLocation, absoluteSnippetPath);
+        if (!file_exists(absoluteSnippetPath)) {
+            printf("%s\n", strerror(errno));
+            return EXIT_FAILURE;
+        }
+
+        chown(absoluteSnippetPath, user->pw_uid, user->pw_gid);
+        chmod(absoluteSnippetPath, permissions);
+    } else if (strcmp(action, "delete") == 0) {
+        printf("Removing config '%s' & link '%s'\n", absoluteAvailablePath, absoluteEnabledPath);
+
+        unlink(absoluteAvailablePath);
+        unlink(absoluteEnabledPath);
+    } else if (strcmp(action, "delete-snippet") == 0) {
+        printf("Removing snippet '%s'\n", absoluteSnippetPath);
+
+        unlink(absoluteSnippetPath);
+    } else if (strcmp(action, "unlink") == 0) {
         printf("Removing link '%s'\n", absoluteEnabledPath);
 
         unlink(absoluteEnabledPath);
@@ -105,3 +121,23 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
+struct passwd* getUser() {
+    register struct passwd *pw;
+    register uid_t uid;
+    int c;
+
+    uid = geteuid();
+    pw = getpwuid(uid);
+
+    if (pw) {
+        return pw;
+    }
+
+    fprintf(stderr, "Cannot find username for UID %u\n", (unsigned) uid);
+    exit (EXIT_FAILURE);
+}
+
+bool file_exists(char *filename) {
+    struct stat buffer;
+    return (stat(filename, &buffer) == 0);
+}

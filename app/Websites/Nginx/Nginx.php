@@ -2,7 +2,7 @@
 
 namespace App\Websites\Nginx;
 
-use App\TemplateEngine\Parser;
+use App\TemplateEngine\Parser as TemplateParser;
 use App\Websites\Contracts\ConfigParserContract;
 use App\Websites\Contracts\WebserverContract;
 use App\Websites\Nginx\ConfigParser\Config;
@@ -10,32 +10,62 @@ use Illuminate\Support\Facades\Log;
 
 class Nginx implements WebserverContract
 {
-    public function createVirtualHost($template, $location, $data)
+    public function createVirtualHost($template, $name, $data)
     {
-        $parser = new Parser($template);
+        $parser = new TemplateParser($template);
         $parser->render($data);
 
-        if (!$parser->asFile($location)) {
+        $tmpLocation = tempnam(sys_get_temp_dir(), 'webadmin-nginx-vhost');
+        $safeTmpLocation = escapeshellarg($tmpLocation);
+        $safeName = escapeshellarg($name);
+        $bin = escapeshellarg(base_path('bin/webserver_manager'));
+
+        // Save to tmp first
+        if (!$parser->asFile($tmpLocation)) {
             return;
         }
 
-        $enableLocation = str_replace('available', 'enabled', $location);
-        exec("chmod 755 $location");
-        exec("ln -sf $location $enableLocation");
+        // Create in /etc/nginx/sites-available/$name.conf
+        $lastLine = exec(sprintf('%s create %s %s 2>&1', $bin, $safeName, $safeTmpLocation), $retArr, $retVal);
+
+        if ($retVal !== 0) {
+            Log::error($retArr);
+            throw new \RuntimeException("webserver_manager failed creating: '$lastLine'");
+        }
+
+        // Link /etc/nginx/sites-enabled/$name.conf -> /etc/nginx/sites-available/$name.conf
+        $lastLine = exec(sprintf('%s link %s 2>&1', $bin, $safeName), $retArr, $retVal);
+
+        if ($retVal !== 0) {
+            Log::error($retArr);
+            throw new \RuntimeException("webserver_manager failed linking: '$lastLine'");
+        }
 
         return Config::createFromString($parser->asString());
     }
 
-    public function createSnippet($template, $location)
+    public function createSnippet($template, $name)
     {
-        $parser = new Parser($template);
+        $parser = new TemplateParser($template);
         $parser->render();
 
-        if (!$parser->asFile($location)) {
+        $tmpLocation = tempnam(sys_get_temp_dir(), 'webadmin-nginx-snippet');
+        $safeTmpLocation = escapeshellarg($tmpLocation);
+        $safeName = escapeshellarg($name);
+        $bin = escapeshellarg(base_path('bin/webserver_manager'));
+
+        // Save to tmp first
+        if (!$parser->asFile($tmpLocation)) {
             return;
         }
 
-        exec("chmod 755 $location");
+        // Create in /etc/nginx/snippets/$name.conf
+        $lastLine = exec(sprintf('%s create-snippet %s %s 2>&1', $bin, $safeName, $safeTmpLocation), $retArr, $retVal);
+
+        if ($retVal !== 0) {
+            Log::error($retArr);
+            throw new \RuntimeException("webserver_manager failed creating: '$lastLine'");
+        }
 
         return Config::createFromString($parser->asString());
     }
