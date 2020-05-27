@@ -54,9 +54,9 @@ class CreateLetsencryptCertificateCommand extends Command
         // First delete any current certifcate
         $this->call('letsencrypt:delete', ['domain' => $domain]);
 
-        $cmd = sprintf('bash %s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s 2>&1', $bin, $configFile, $safeEmail, $safeDomain, $safeDomain);
+        $cmd = sprintf('%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s 2>&1', $bin, $configFile, $safeEmail, $safeDomain, $safeDomain);
         if (Str::contains($domain, '*.')) {
-            $cmd = sprintf('bash %s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s 2>&1', $bin, $configFile, $safeEmail, $safeDomain);
+            $cmd = sprintf('%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s 2>&1', $bin, $configFile, $safeEmail, $safeDomain);
         }
 
         // Then create new certifcate
