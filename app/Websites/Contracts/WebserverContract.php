@@ -9,6 +9,6 @@ interface WebserverContract
     public function createVirtualHost($template, $location, $data);
     public function createSnippet($template, $location);
     public function getWebsiteConfigPath($domain);
-    public function createSSLCertificate($domain, $registrantEmail);
+    public function createRootDirectory(ConfigParserContract $vHost);
     public function reload();
 }

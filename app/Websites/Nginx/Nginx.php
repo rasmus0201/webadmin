@@ -6,6 +6,7 @@ use App\TemplateEngine\Parser;
 use App\Websites\Contracts\ConfigParserContract;
 use App\Websites\Contracts\WebserverContract;
 use App\Websites\Nginx\ConfigParser\Config;
+use Illuminate\Support\Facades\Log;
 
 class Nginx implements WebserverContract
 {
@@ -28,7 +29,7 @@ class Nginx implements WebserverContract
     public function createSnippet($template, $location)
     {
         $parser = new Parser($template);
-        $parser->render($data);
+        $parser->render();
 
         if (!$parser->asFile($location)) {
             return;
@@ -47,8 +48,12 @@ class Nginx implements WebserverContract
 
         $rootPath = $vHost['server']['root']->parametersAsString();
 
+        Log::debug($rootPath);
+
         if (!file_exists($rootPath)) {
-            mkdir($rootPath, 0755, true);
+            $r = mkdir($rootPath, 0755, true);
+
+            Log::debug("mkdir() = $r");
         }
     }
 
@@ -56,27 +61,6 @@ class Nginx implements WebserverContract
     {
         $domain = escapeshellcmd($domain);
         return "/etc/nginx/sites-available/{$domain}.conf";
-    }
-
-    public function createSSLCertificate($domain, $registrantEmail)
-    {
-        $safeDomain = escapeshellarg($domain);
-        $safeMail = escapeshellarg($registrantEmail);
-        $iniFile = escapeshellarg(base_path('digitalocean.ini'));
-
-        // First delete any current certifcate
-        exec("sudo certbot delete --cert-name $safeDomain 2>&1", $retArr);
-
-        // Then create new certifcate
-        $lastLine = exec(
-            "sudo certbot certonly --dns-digitalocean --dns-digitalocean-credentials $iniFile -m $safeMail -d $safeDomain -d www.$safeDomain 2>&1",
-            $retArr,
-            $retVal
-        );
-
-        if ($retVal !== 0) {
-            throw new \RuntimeException("certbot failed: '$lastLine'");
-        }
     }
 
     public function reload()
