@@ -42,7 +42,7 @@ class DeleteLetsencryptCertificateCommand extends Command
         $bin = escapeshellarg(base_path('bin/certbot_manager'));
 
         // Delete certifcate
-        $lastLine = exec(sprintf('bash %s delete --cert-name %s 2>&1', $bin, $safeDomain), $retArr, $retVal);
+        $lastLine = exec(sprintf('%s delete --cert-name %s 2>&1', $bin, $safeDomain), $retArr, $retVal);
 
         if ($retVal !== 0) {
             Log::error($retArr);
