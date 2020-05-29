@@ -82,7 +82,7 @@ class Nginx implements WebserverContract
         Log::debug($rootPath);
 
         if (!file_exists($rootPath)) {
-            $r = mkdir($rootPath, 0755, true);
+            $r = mkdir($rootPath, 0775, true);
 
             Log::debug("mkdir() = $r");
         }
