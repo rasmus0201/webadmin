@@ -79,12 +79,8 @@ class Nginx implements WebserverContract
 
         $rootPath = $vHost['server']['root']->parametersAsString();
 
-        Log::debug($rootPath);
-
         if (!file_exists($rootPath)) {
             $r = mkdir($rootPath, 0775, true);
-
-            Log::debug("mkdir() = $r");
         }
     }
 

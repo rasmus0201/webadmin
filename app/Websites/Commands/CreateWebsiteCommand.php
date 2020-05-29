@@ -70,9 +70,10 @@ class CreateWebsiteCommand extends Command
         $webserver = new $this->drivers[$driver]();
 
         // Generate virtual host for domain
+        $vHostConfigFileName = $webserver->getVirtualHostName($domain);
         $vHost = $webserver->createVirtualHost(
             $template,
-            $webserver->getVirtualHostName($domain),
+            $vHostConfigFileName,
             [
                 WebserverContract::DOMAIN => $domain
             ]
@@ -86,7 +87,16 @@ class CreateWebsiteCommand extends Command
             ]);
         }
 
+        // TODO Test if config is correct setup,
+        // if not revert changes (aka delete config file) and exit
+
         $webserver->createRootDirectory($vHost);
+
+        // TODO Install website from git repo or just add default html file
+        // If git we need to support "composer install" if a composer.json is found
+        // It also would be nice to make it able to do a specific branch/tag
+        // There should probably be a way to access the id_rsa.pub for the www-user,
+        // so you can allow it to read in the repository
 
         $webserver->reload();
     }
