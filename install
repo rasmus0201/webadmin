@@ -17,10 +17,7 @@ sudo chmod 4511 ./bin/certbot_manager
 # Install dependencies for webadmin + publish .env
 sudo -u www-data -g webadmin composer install
 sudo -u www-data -g webadmin cp .env.example .env
+sudo -u www-data -g webadmin cp digitalocean.ini.example digitalocean.ini
 sudo -u www-data -g webadmin php artisan key:generate
 
-
-# sudo -u root -g webadmin mkdir /var/letsencrypt
-# chmod g=rwx /var/letsencrypt
-# sudo -u root -g webadmin mkdir /var/letsencrypt/{config,work,logs}
-# chmod g=rwx /var/letsencrypt/{config,work,logs}
+echo "Please update the .env and digitalocean.ini files!\n"
