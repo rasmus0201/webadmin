@@ -96,7 +96,7 @@ class CreateWebsiteCommand extends Command
 
         // Test if config is correct setup,
         // if not revert changes (aka delete config file) and exit
-        if (!$webserver->test()) {
+        if (!$webserver->test()) {
             $webserver->deleteVirtualHost($vHostConfigFileName);
 
             throw new \Exception("There was something wrong with the specified config.");
