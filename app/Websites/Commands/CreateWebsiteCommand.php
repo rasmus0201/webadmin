@@ -72,7 +72,7 @@ class CreateWebsiteCommand extends Command
 
         // Before doing anything, make sure the webserver
         // is functioning normally
-        if (!$webserver->test()) {
+        if (!$webserver->test()) {
             throw new \Exception("There is something wrong with the webserver config.");
         }
 
