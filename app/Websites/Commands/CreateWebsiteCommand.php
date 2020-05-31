@@ -102,8 +102,6 @@ class CreateWebsiteCommand extends Command
             throw new \Exception("There was something wrong with the specified config.");
         }
 
-        $webserver->createRootDirectory($vHost);
-
         // Install website from git repo or just add default html file
         if ($repository = $this->option('git-repository')) {
             // TODO Need to support "composer install" if a composer.json is found
