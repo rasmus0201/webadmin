@@ -8,6 +8,8 @@ use App\Websites\Contracts\WebserverContract;
 use App\Websites\Nginx\ConfigParser\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Nginx implements WebserverContract
 {
@@ -45,6 +47,23 @@ class Nginx implements WebserverContract
         return Config::createFromString($parser->asString());
     }
 
+    public function deleteVirtualHost($name)
+    {
+        $safeName = escapeshellarg($name);
+        $bin = escapeshellarg(base_path('bin/webserver_manager'));
+
+        // Delete from /etc/nginx/sites-available/$name.conf
+        // and /etc/nginx/sites-enabled/$name.conf
+        $lastLine = exec(sprintf('%s delete %s 2>&1', $bin, $safeName), $retArr, $retVal);
+
+        if ($retVal !== 0) {
+            Log::error($retArr);
+            throw new \RuntimeException("webserver_manager failed creating: '$lastLine'");
+        }
+
+        return true;
+    }
+
     public function createSnippet($template, $name)
     {
         $parser = new TemplateParser($template);
@@ -71,19 +90,6 @@ class Nginx implements WebserverContract
         return Config::createFromString($parser->asString());
     }
 
-    public function createRootDirectory(ConfigParserContract $vHost)
-    {
-        if (!isset($vHost['server']) && !isset($vHost['server']['root'])) {
-            throw new \RuntimeException("The index \$vHost['server']['root'] must be set.");
-        }
-
-        $rootPath = $vHost['server']['root']->parametersAsString();
-
-        if (!file_exists($rootPath)) {
-            $r = mkdir($rootPath, 0775, true);
-        }
-    }
-
     public function getWebsiteConfigPath($domain)
     {
         $domain = escapeshellcmd($domain);
@@ -108,8 +114,53 @@ class Nginx implements WebserverContract
         return $domain;
     }
 
+    public function createWithDummyIndex(ConfigParserContract $vHost)
+    {
+        $this->rootDirectoryGuard($vHost);
+
+        $publicPath = $vHost['server']['root']->parametersAsString();
+        $indexPath = $publicPath . '/index.php';
+
+        if (!file_exists($publicPath)) {
+            $r = mkdir($publicPath, 0775, true);
+        }
+
+        if (!file_exists($indexPath)) {
+            $h = fopen($indexPath, 'w');
+            fwrite($h, '<h1>This website is waiting for configuration</h1>');
+            fclose($h);
+        }
+    }
+
+    public function createWithGitRepository(ConfigParserContract $vHost, $gitRepository)
+    {
+        $this->rootDirectoryGuard($vHost);
+
+        $rootPath = dirname($vHost['server']['root']->parametersAsString());
+
+        if (!file_exists($rootPath)) {
+            $r = mkdir($rootPath, 0775, true);
+        }
+
+        exec(sprintf("cd %s && /usr/bin/git clone %s && composer install", escapeshellcmd($rootPath), escapeshellcmd($gitRepository)));
+    }
+
     public function reload()
     {
         exec('sudo /etc/init.d/nginx reload');
+    }
+
+    public function test()
+    {
+        exec('sudo /etc/init.d/nginx configtest', $retArr, $retVal);
+
+        return $retVal === 0 ? true : false;
+    }
+
+    private function rootDirectoryGuard(ConfigParserContract $vHost)
+    {
+        if (!isset($vHost['server']) && !isset($vHost['server']['root'])) {
+            throw new \RuntimeException("The index \$vHost['server']['root'] must be set.");
+        }
     }
 }

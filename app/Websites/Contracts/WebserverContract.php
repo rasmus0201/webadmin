@@ -10,6 +10,6 @@ interface WebserverContract
     public function createSnippet($template, $location);
     public function getWebsiteConfigPath($domain);
     public function getVirtualHostName($domain);
-    public function createRootDirectory(ConfigParserContract $vHost);
+    // public function createRootDirectory(ConfigParserContract $vHost);
     public function reload();
 }

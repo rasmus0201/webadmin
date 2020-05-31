@@ -35,14 +35,30 @@ bool file_exists(char *filename) {
 int main(int argc, char **argv) {
     setuid(0);
 
-    if (argc < 3) {
-        printf("This binary requires at least 2 arguments!");
+    if (argc < 2) {
+        printf("This binary requires at least 1 argument!");
         return EXIT_FAILURE;
     }
 
     char *action = strtok(argv[1], " ");
+
+    if (strcmp(action, "test") == 0) {
+        bool retVal = system("nginx -t");
+
+        if (retVal != 0) {
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+    if (argc < 3) {
+        printf("This binary requires at least 2 arguments for that action!");
+        return EXIT_FAILURE;
+    }
+
     char *vHostFileName = strtok(argv[2], " ");
-    char *webserverConfigPath = "/etc/nginx/";
+    char webserverConfigPath[] = "/etc/nginx/";
     char availablePath[] = "sites-available/";
     char snippetsPath[] = "snippets/";
     char enabledPath[] = "sites-enabled/";
@@ -133,8 +149,6 @@ int main(int argc, char **argv) {
         printf("Creating link '%s' -> '%s'\n", absoluteAvailablePath, absoluteEnabledPath);
 
         symlink(absoluteAvailablePath, absoluteEnabledPath);
-    } else if (strcmp(action, "test") == 0) {
-        system("nginx -t");
     } else {
         printf("Action '%s' not available\n", action);
         return EXIT_FAILURE;
