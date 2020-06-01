@@ -106,7 +106,7 @@ class CreateWebsiteCommand extends Command
 
         // Install website from git repo or just add default html file
         if ($repository = $this->option('git-repository')) {
-            $branch = $this->option('branch');
+            $branch = $this->option('git-branch');
             $rootPath = $vHost->getRootPath();
 
             if (!file_exists($rootPath)) {

@@ -9,7 +9,7 @@ mkdir /home/www-data
 mkdir /home/www-data/.ssh
 ssh-keygen -q -f /home/www-data/.ssh/id_rsa -C www-data -N ""
 chown -R www-data:www-data /home/www-data
-chmod g=r /home/www-data/.ssh/id_rsa
+# chmod g=r /home/www-data/.ssh/id_rsa
 
 # Install dependencies for webadmin + publish .env
 sudo -u www-data -g www-data composer install
