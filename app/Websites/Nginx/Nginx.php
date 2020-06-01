@@ -99,6 +99,11 @@ class Nginx implements WebserverContract
             $retVal
         );
 
+        if ($retVal !== 0) {
+            Log::error($retArr);
+            throw new \RuntimeException("Failed removing root directory for virtual host: '$lastLine'");
+        }
+
         return true;
     }
 
