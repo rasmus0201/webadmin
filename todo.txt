@@ -1,12 +1,12 @@
 1. Auth (login)
     -> Request password reset
     -> With reCaptcha on login and request password
+    -> 2FA?
 2. Dashboard (admin panel + layout)
 3. Create new website
     -> Specify domain (url)
     -> Add nginx config
     -> https with letsencrypt & certbot
-    -> Add user for DB and create DB
     -> Add root dir
     -> Edit env configs
     -> Services? Redis, Supervisor
@@ -15,20 +15,29 @@
 4. Edit websites
     -> Same options as when creating
 
-5. Backup website & databases
+5 Add database users & databases
+    -> Add user for DB and create DB
+
+6.Edit/delete db user & edit/delete databases
+
+7. Backup website & databases
+
+8. (ftp users?)
 
 
 Use https://symfony.com/doc/current/components/filesystem.html
-USe https://symfony.com/doc/current/components/process.html
-
-NOTE: https://github.com/MagePsycho/nginx-virtual-host-bash-script
+Use https://symfony.com/doc/current/components/process.html
 
 NOTE:
-certbot certonly --dns-digitalocean --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini -m xxr@live.dk -d test3.rasmusbundsgaard.dk -d www.test3.rasmusbundsgaard.dk
-
-The following error was encountered:
-[Errno 13] Permission denied: '/var/log/letsencrypt/.certbot.lock'
-Either run as root, or set --config-dir, --work-dir, and --logs-dir to writeable paths.
+./certbot_manager certonly \
+    --non-interactive \
+    --dns-digitalocean \
+    --agree-tos \
+    --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini \
+    -m xxr@live.dk \
+    --domain test1.rasmusbundsgaard.dk \
+    --domain www.test1.rasmusbundsgaard.dk \
+    --dry-run
 
 NOTE:
     Create new DB user:
@@ -57,40 +66,3 @@ NOTE:
     Delete user:
     REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'USERNAME'@'localhost';
     DROP USER 'USERNAME'@'localhost';
-
-
-
-https://0x4a42.net/2017/using-certboot-without-root-pribileges/
-https://xyrillian.de/thoughts/posts/how-i-run-certbot.html
-    addgroup --system letsencrypt
-    adduser --system --home=/var/lib/letsencrypt --ingroup=letsencrypt letsencrypt
-
-    chown -R letsencrypt:letsencrypt /etc/letsencrypt
-    chown -R letsencrypt:letsencrypt /var/lib/letsencrypt
-    chown -R letsencrypt:letsencrypt /var/log/letsencrypt && chmod -R 0700 /var/log/letsencrypt
-    chown letsencrypt:letsencrypt /var/www/webadmin/digitalocean.ini && chmod 0700 /var/www/webadmin/digitalocean.ini
-
-    sudo -u letsencrypt -g letsencrypt certbot certonly --dns-digitalocean --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini -m xxr@live.dk -d test3.rasmusbundsgaard.dk -d www.test3.rasmusbundsgaard.dk
-
-
-    certbot certonly \
-        --non-interactive \
-        --dns-digitalocean \
-        --agree-tos \
-        --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini \
-        --config-dir=/var/letsencrypt/config/ --work-dir=/var/letsencrypt/work/ --logs-dir=/var/letsencrypt/logs/ \
-        -m xxr@live.dk \
-        --domain test4.rasmusbundsgaard.dk \
-        --domain www.test4.rasmusbundsgaard.dk \
-        --dry-run
-
-
-    ./certbot_manager certonly \
-        --non-interactive \
-        --dns-digitalocean \
-        --agree-tos \
-        --dns-digitalocean-credentials /var/www/webadmin/digitalocean.ini \
-        -m xxr@live.dk \
-        --domain test1.rasmusbundsgaard.dk \
-        --domain www.test1.rasmusbundsgaard.dk \
-        --dry-run

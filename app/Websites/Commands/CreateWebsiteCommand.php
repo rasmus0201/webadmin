@@ -19,7 +19,9 @@ class CreateWebsiteCommand extends Command
                         {--email= : Email for registering with external services}
                         {--domain= : The domain of the website}
                         {--template= : Template to the driver}
-                        {--git-repository= : From which git repository to install from}';
+                        {--git-repository= : From which git repository to install from}
+                        {--git-branch=master: The branch to checkout}
+                        {--env= : The .env file contents}';
 
     /**
      * The console command description.
@@ -104,13 +106,58 @@ class CreateWebsiteCommand extends Command
 
         // Install website from git repo or just add default html file
         if ($repository = $this->option('git-repository')) {
-            // TODO Need to support "composer install" if a composer.json is found
-            // It also would be nice to make it able to do a specific branch/tag
-            // There should probably be a way to access the id_rsa.pub for the www-user,
-            // so you can allow it to read in the repository
-            $webserver->createWithGitRepository($vHost, $repository);
+            $branch = $this->option('branch');
+            $rootPath = $vHost->getRootPath();
+
+            if (!file_exists($rootPath)) {
+                $r = mkdir($rootPath, 0775, true);
+            }
+
+            $idFilePath = escapeshellarg('/home/www-data/.ssh/id_rsa');
+
+            exec(sprintf(
+                "cd %s && /usr/bin/git -c core.sshCommand=\"ssh -i %s\" clone --recurse-submodules %s . --quiet && git checkout %s --quiet",
+                escapeshellcmd($rootPath),
+                escapeshellcmd($idFilePath),
+                escapeshellcmd($repository),
+                escapeshellcmd($branch),
+            ));
+
+            if (file_exists($rootPath . '/composer.json')) {
+                exec(sprintf(
+                    "cd %s && /usr/local/bin/composer install --quiet --no-interaction",
+                    escapeshellcmd($rootPath)
+                ));
+            }
+
+            if (file_exists($rootPath . '/.env.example')) {
+                exec(sprintf(
+                    "cd %s && cp .env.example .env",
+                    escapeshellcmd($rootPath)
+                ));
+            }
         } else {
-            $webserver->createWithDummyIndex($vHost);
+            $publicPath = $vHost->getPublicPath();
+            $indexPath = $publicPath . '/index.php';
+
+            if (!file_exists($publicPath)) {
+                $r = mkdir($publicPath, 0775, true);
+            }
+
+            if (!file_exists($indexPath)) {
+                $h = fopen($indexPath, 'w');
+                fwrite($h, '<h1>This website is waiting for configuration</h1>');
+                fclose($h);
+            }
+        }
+
+        // Publish any .env file with contents
+        if ($env = $this->option('env')) {
+            $envFile = $vHost->getRootPath() . '/.env';
+
+            $h = fopen($envFile, 'w');
+            fwrite($h, $env);
+            fclose($h);
         }
 
         $webserver->reload();

@@ -8,16 +8,7 @@ Prerequisites:
 
 Right now the SSL certifcates is only set up to work with certbot on a `digitalocean` server.
 
-With sudo rights add the `webadmin` group and add www-data to it. You can also add your own user to that group:
-
-`NB: You should not add root to the webadmin group!`
-
-```sh
-sudo groupadd webadmin
-sudo usermod -a -G webadmin www-data
-```
-
-After this you should whitelist commands for the webadmin to use:
+You should whitelist commands for the webadmin system to use (so it can run it with `sudo`):
 
 ```sh
 sudo visudo -f /etc/sudoers.d/webadmin
@@ -27,19 +18,16 @@ A file will open paste this into it:
 
 ```sh
 Cmnd_Alias WEBADMINCMNDS = /etc/init.d/nginx reload, /usr/local/bin/certbot *, /usr/local/bin/composer *
-%webadmin ALL=(ALL) NOPASSWD: WEBADMINCMNDS
+%www-data ALL=(ALL) NOPASSWD: WEBADMINCMNDS
 ```
 
-Next we need to make the binary to execute priviliged webserver operations.
+Next we need to create a ssh key for www-data, then it can fetch your git repositories! You just need to add the public key to your git hosting service (github, gitlab, etc.). We also need to compile some binaries so `certbot` and `nginx` can be managed by webadmin. To do all of this we created an installer. Run it like so:
 
-Compile it like so:
 ```sh
-gcc -o ./bin/webserver_manager ./webserver_manager.c
-sudo chmod 4511 ./bin/webserver_manager // Make sure the right permissions is set
-sudo chown root:root ./bin/webserver_manager
+sudo ./install
 ```
 
-It is important that this binary is stored in the `bin` folder.
+This will also run a composer install and publish the `.env` file.
 
 Next up you should create an administrator for mysql.
 
@@ -76,9 +64,11 @@ ON *.* TO 'webserver_admin'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
-Now you have a mysql admin user with only the needed permissions.
-
+Now you have a mysql admin user with only the needed permissions to manager users and databases.
 
 Finally you should create an [api-token from digitalocean.com](https://cloud.digitalocean.com/account/api/tokens/new) with r/w for SSL certifcates to be verified by letsencrypt.
 
 Then do: `cp digitalocean.ini.example digitalocean.ini` and paste your api token in `digitalocean.ini`.
+
+
+Of course also remember to do a `php artisan migrate` after you have set up the `.env` file correctly (db connection).

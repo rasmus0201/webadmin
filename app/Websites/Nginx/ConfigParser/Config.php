@@ -123,6 +123,26 @@ class Config extends DirectiveCollection implements ConfigParserContract
     }
 
     /**
+     * Get the root path tothe virtual host
+     *
+     * @return string
+     */
+    public function getRootPath()
+    {
+        return dirname($this['server']['root']->parametersAsString());
+    }
+
+    /**
+     * Get the public path to the virtual host
+     *
+     * @return string
+     */
+    public function getPublicPath()
+    {
+        return $this['server']['root']->parametersAsString();
+    }
+
+    /**
      * Parses a config data.
      *
      * @param DirectiveCollection $parent An instance of collection in which to place the result of data parsing.

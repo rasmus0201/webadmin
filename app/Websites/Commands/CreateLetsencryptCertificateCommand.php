@@ -42,26 +42,41 @@ class CreateLetsencryptCertificateCommand extends Command
         $email = $this->option('email');
 
         if (empty($email)) {
-            throw new \RuntimeException("The option '--email' is required.");
+            throw new \RuntimeException("The option '--email' is unfortunately not optional!");
         }
 
         $domain = $this->argument('domain');
+        $bin = base_path('bin/certbot_manager');
+        $configFile = base_path('digitalocean.ini');
         $safeDomain = escapeshellarg($domain);
         $safeEmail = escapeshellarg($email);
-        $bin = escapeshellarg(base_path('bin/certbot_manager'));
-        $configFile = escapeshellarg(base_path('digitalocean.ini'));
 
         // First delete any current certifcate
         $this->call('letsencrypt:delete', ['domain' => $domain]);
 
-        $cmd = sprintf('%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s 2>&1', $bin, $configFile, $safeEmail, $safeDomain, $safeDomain);
+        $cmd = sprintf(
+            '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s 2>&1',
+            $bin,
+            $configFile,
+            $safeEmail,
+            $safeDomain,
+            $safeDomain
+        );
+
+        // Check if wildcard certifcate
         if (Str::contains($domain, '*.')) {
-            $cmd = sprintf('%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s 2>&1', $bin, $configFile, $safeEmail, $safeDomain);
+            $cmd = sprintf(
+                '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s 2>&1',
+                $bin,
+                $configFile,
+                $safeEmail,
+                $safeDomain
+            );
         }
 
         // Then create new certifcate
         $lastLine = exec(
-            $cmd,
+            escapeshellcmd($cmd),
             $retArr,
             $retVal
         );

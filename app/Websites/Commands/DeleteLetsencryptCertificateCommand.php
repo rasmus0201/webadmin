@@ -38,11 +38,18 @@ class DeleteLetsencryptCertificateCommand extends Command
      */
     public function handle()
     {
-        $safeDomain = escapeshellarg($this->argument('domain'));
-        $bin = escapeshellarg(base_path('bin/certbot_manager'));
+        $bin = base_path('bin/certbot_manager');
 
         // Delete certifcate
-        $lastLine = exec(sprintf('%s delete --cert-name %s 2>&1', $bin, $safeDomain), $retArr, $retVal);
+        $lastLine = exec(
+            escapeshellcmd(sprintf(
+                '%s delete --cert-name %s 2>&1',
+                $bin,
+                escapeshellarg($this->argument('domain'))
+            )),
+            $retArr,
+            $retVal
+        );
 
         if ($retVal !== 0) {
             Log::error($retArr);
