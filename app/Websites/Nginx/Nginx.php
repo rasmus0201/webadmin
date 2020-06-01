@@ -142,7 +142,9 @@ class Nginx implements WebserverContract
             $r = mkdir($rootPath, 0775, true);
         }
 
-        exec(sprintf("cd %s && /usr/bin/git clone %s . && composer install", escapeshellcmd($rootPath), escapeshellcmd($gitRepository)));
+        $idFilePath = escapeshellarg('/home/www-data/.ssh/id_rsa');
+
+        exec(sprintf("cd %s && /usr/bin/git -c core.sshCommand=\"ssh -i %s\" clone %s . && composer install", escapeshellcmd($rootPath), escapeshellcmd($idFilePath), escapeshellcmd($gitRepository)));
     }
 
     public function reload()
