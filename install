@@ -27,5 +27,5 @@ sudo -u www-data -g www-data cp .env.example .env
 sudo -u www-data -g www-data cp digitalocean.ini.example digitalocean.ini
 sudo -u www-data -g www-data php artisan key:generate
 
-echo "Please update the .env and digitalocean.ini files!\n"
-echo "If you want webadmin to use ssh to retrieve git repositories, you must copy the public key to the service.\n Key is at /home/www-data/.ssh/id_rsa.pub"
+echo "Please update the .env and digitalocean.ini files!"
+echo "If you want webadmin to use ssh to retrieve git repositories, you must copy the public key to the service. Key is at /home/www-data/.ssh/id_rsa.pub"

@@ -55,7 +55,7 @@ class CreateLetsencryptCertificateCommand extends Command
         $this->call('letsencrypt:delete', ['domain' => $domain]);
 
         $cmd = sprintf(
-            '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s 2>&1',
+            '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s -d www.%s',
             $bin,
             $configFile,
             $safeEmail,
@@ -66,7 +66,7 @@ class CreateLetsencryptCertificateCommand extends Command
         // Check if wildcard certifcate
         if (Str::contains($domain, '*.')) {
             $cmd = sprintf(
-                '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s 2>&1',
+                '%s certonly --dns-digitalocean --dns-digitalocean-credentials %s -m %s -d %s',
                 $bin,
                 $configFile,
                 $safeEmail,
@@ -76,7 +76,7 @@ class CreateLetsencryptCertificateCommand extends Command
 
         // Then create new certifcate
         $lastLine = exec(
-            escapeshellcmd($cmd),
+            escapeshellcmd($cmd) . '2>&1',
             $retArr,
             $retVal
         );

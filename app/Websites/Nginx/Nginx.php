@@ -29,11 +29,11 @@ class Nginx implements WebserverContract
         // Create in /etc/nginx/sites-available/$name.conf
         $lastLine = exec(
             escapeshellcmd(sprintf(
-                '%s create %s %s 2>&1',
+                '%s create %s %s',
                 $bin,
                 escapeshellarg($name),
                 escapeshellarg($tmpLocation)
-            )),
+            )) . ' 2>&1',
             $retArr,
             $retVal
         );
@@ -46,10 +46,10 @@ class Nginx implements WebserverContract
         // Link /etc/nginx/sites-enabled/$name.conf -> /etc/nginx/sites-available/$name.conf
         $lastLine = exec(
             escapeshellcmd(sprintf(
-                '%s link %s 2>&1',
+                '%s link %s',
                 $bin,
                 escapeshellarg($name)
-            )),
+            )) . ' 2>&1',
             $retArr,
             $retVal
         );
@@ -70,10 +70,10 @@ class Nginx implements WebserverContract
         // and /etc/nginx/sites-enabled/$name.conf
         $lastLine = exec(
             escapeshellcmd(sprintf(
-                '%s delete %s 2>&1',
+                '%s delete %s',
                 $bin,
                 escapeshellarg($name)
-            )),
+            )) . ' 2>&1',
             $retArr,
             $retVal
         );
@@ -118,11 +118,11 @@ class Nginx implements WebserverContract
         // Create in /etc/nginx/snippets/$name.conf
         $lastLine = exec(
             escapeshellcmd(sprintf(
-                '%s create-snippet %s %s 2>&1',
+                '%s create-snippet %s %s',
                 $bin,
                 escapeshellarg($name),
                 escapeshellarg($tmpLocation)
-            )),
+            )) . ' 2>&1',
             $retArr,
             $retVal
         );
@@ -137,7 +137,6 @@ class Nginx implements WebserverContract
 
     public function getWebsiteConfigPath($domain)
     {
-        $domain = escapeshellcmd($domain);
         return "/etc/nginx/sites-available/{$domain}.conf";
     }
 

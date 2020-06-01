@@ -113,28 +113,34 @@ class CreateWebsiteCommand extends Command
                 $r = mkdir($rootPath, 0775, true);
             }
 
-            $idFilePath = escapeshellarg('/home/www-data/.ssh/id_rsa');
+            $idFilePath = '/home/www-data/.ssh/id_rsa';
 
-            exec(sprintf(
-                "cd %s && /usr/bin/git -c core.sshCommand=\"ssh -i %s\" clone --recurse-submodules %s . --quiet && git checkout %s --quiet",
-                escapeshellcmd($rootPath),
-                escapeshellcmd($idFilePath),
-                escapeshellcmd($repository),
-                escapeshellcmd($branch),
-            ));
+            exec(
+                escapeshellcmd(sprintf(
+                    "cd %s && /usr/bin/git -c core.sshCommand=\"ssh -i %s\" clone --recurse-submodules %s . --quiet && git checkout %s --quiet",
+                    escapeshellarg($rootPath),
+                    escapeshellarg($idFilePath),
+                    escapeshellarg($repository),
+                    escapeshellarg($branch),
+                ))
+            );
 
             if (file_exists($rootPath . '/composer.json')) {
-                exec(sprintf(
-                    "cd %s && /usr/local/bin/composer install --quiet --no-interaction",
-                    escapeshellcmd($rootPath)
-                ));
+                exec(
+                    escapeshellcmd(sprintf(
+                        "cd %s && /usr/local/bin/composer install --quiet --no-interaction",
+                        escapeshellarg($rootPath)
+                    ))
+                );
             }
 
             if (file_exists($rootPath . '/.env.example')) {
-                exec(sprintf(
-                    "cd %s && cp .env.example .env",
-                    escapeshellcmd($rootPath)
-                ));
+                exec(
+                    escapeshellcmd(sprintf(
+                        "cd %s && cp .env.example .env",
+                        escapeshellarg($rootPath)
+                    ))
+                );
             }
         } else {
             $publicPath = $vHost->getPublicPath();

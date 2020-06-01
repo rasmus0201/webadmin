@@ -43,10 +43,10 @@ class DeleteLetsencryptCertificateCommand extends Command
         // Delete certifcate
         $lastLine = exec(
             escapeshellcmd(sprintf(
-                '%s delete --cert-name %s 2>&1',
+                '%s delete --cert-name %s',
                 $bin,
                 escapeshellarg($this->argument('domain'))
-            )),
+            )) . '2>&1',
             $retArr,
             $retVal
         );
