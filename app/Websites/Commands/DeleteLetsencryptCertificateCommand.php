@@ -46,7 +46,7 @@ class DeleteLetsencryptCertificateCommand extends Command
                 '%s delete --cert-name %s',
                 $bin,
                 escapeshellarg($this->argument('domain'))
-            )) . '2>&1',
+            )) . ' 2>&1',
             $retArr,
             $retVal
         );

@@ -11,6 +11,17 @@ ssh-keygen -q -f /home/www-data/.ssh/id_rsa -C www-data -N ""
 chown -R www-data:www-data /home/www-data
 chmod g=r /home/www-data/.ssh/id_rsa
 
+# Install dependencies for webadmin + publish .env
+sudo -u www-data -g www-data composer install
+sudo -u www-data -g www-data cp .env.example .env
+sudo -u www-data -g www-data cp digitalocean.ini.example digitalocean.ini
+sudo -u www-data -g www-data php artisan key:generate
+
+# Permissions
+sudo find ./* -type d -exec chmod 775 {} +
+sudo find ./* -type f -exec chmod 664 {} +
+sudo chown -R www-data:www-data ./*
+
 # Webserver manager - to gain privileged access to www-data
 gcc -o ./bin/webserver_manager ./webserver_manager.c
 sudo chown root:root ./bin/webserver_manager
@@ -20,12 +31,6 @@ sudo chmod 4511 ./bin/webserver_manager
 gcc -o ./bin/certbot_manager ./certbot_manager.c
 sudo chown root:root ./bin/certbot_manager
 sudo chmod 4511 ./bin/certbot_manager
-
-# Install dependencies for webadmin + publish .env
-sudo -u www-data -g www-data composer install
-sudo -u www-data -g www-data cp .env.example .env
-sudo -u www-data -g www-data cp digitalocean.ini.example digitalocean.ini
-sudo -u www-data -g www-data php artisan key:generate
 
 echo "Please update the .env and digitalocean.ini files!"
 echo "If you want webadmin to use ssh to retrieve git repositories, you must copy the public key to the service. Key is at /home/www-data/.ssh/id_rsa.pub"

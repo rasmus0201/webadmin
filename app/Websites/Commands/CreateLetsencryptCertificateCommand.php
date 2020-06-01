@@ -76,7 +76,7 @@ class CreateLetsencryptCertificateCommand extends Command
 
         // Then create new certifcate
         $lastLine = exec(
-            escapeshellcmd($cmd) . '2>&1',
+            escapeshellcmd($cmd) . ' 2>&1',
             $retArr,
             $retVal
         );
