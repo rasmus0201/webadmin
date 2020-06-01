@@ -18,6 +18,9 @@
 5. Backup website & databases
 
 
+Use https://symfony.com/doc/current/components/filesystem.html
+USe https://symfony.com/doc/current/components/process.html
+
 NOTE: https://github.com/MagePsycho/nginx-virtual-host-bash-script
 
 NOTE:

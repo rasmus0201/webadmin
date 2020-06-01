@@ -4,6 +4,12 @@
 sudo groupadd webadmin
 sudo usermod -a -G webadmin www-data
 
+# Make ssh keys for webadmin
+mkdir /home/www-data
+mkdir /home/www-data/.ssh
+ssh-keygen -q -f /home/www-data/.ssh/id_rsa -C www-data -N ""
+chown -R www-data:webadmin /home/www-data
+
 # Webserver manager - to gain privileged access to www-data
 gcc -o ./bin/webserver_manager ./webserver_manager.c
 sudo chown root:root ./bin/webserver_manager
@@ -21,3 +27,4 @@ sudo -u www-data -g webadmin cp digitalocean.ini.example digitalocean.ini
 sudo -u www-data -g webadmin php artisan key:generate
 
 echo "Please update the .env and digitalocean.ini files!\n"
+echo "If you want webadmin to use ssh to retrieve git repositories, you must copy the public key to the service.\n Key is at /home/www-data/.ssh/id_rsa.pub"
