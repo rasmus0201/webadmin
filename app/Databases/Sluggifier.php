@@ -21,11 +21,12 @@ class Sluggifier
 
     private static function slug($str, $limit)
     {
-        return Str::limit(
+        return Str::substr(
             Str::slug(
                 str_replace('.', '_', $str),
                 '_'
             ),
+            0,
             $limit
         );
     }
