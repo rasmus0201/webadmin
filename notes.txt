@@ -1,0 +1,9 @@
+php artisan website:make --email=xxr@live.dk --domain=todo.rasmusbundsgaard.dk --template=/var/www/webadmin/app/Websites/Nginx/Templates/NewSecureWebsite.stub --secure --git-branch=master --git-repository=git@github.com:rasmus0201/todo.git
+
+sudo -u www-data -g www-data git -c core.sshCommand="ssh -i /home/www-data/.ssh/id_rsa" pull
+
+sudo find ./app/* -type f -exec chmod 664 {} +
+
+
+
+php artisan website:make --email=xxr@live.dk --domain=todos.rasmusbundsgaard.dk --template=/var/www/webadmin/app/Websites/Nginx/Templates/NewSecureWebsite.stub --secure --git-branch=master --git-repository=git@github.com:rasmus0201/todo.git
