@@ -40,7 +40,7 @@ class CreateFullWebsiteCommand extends Command
     public function handle()
     {
         $dbUsername = Sluggifier::username($this->argument('domain'));
-        $dbName = Sluggifier::database($this->argument('database'));
+        $dbName = Sluggifier::database($this->argument('domain'));
         $dbPassword = Str::random(16);
 
         $this->call('db:create-database', [
