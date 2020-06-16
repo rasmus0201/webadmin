@@ -41,7 +41,7 @@ class CreateFullWebsiteCommand extends Command
     {
         $dbName = Str::slug($this->argument('domain'), '_');
         $dbUsername = Str::limit(
-            Str::slug($this->argument('username'), '_'),
+            Str::slug($this->argument('domain'), '_'),
             CreateDatabaseUserCommand::USERNAME_LIMIT
         );
         $dbPassword = Str::random(16);
