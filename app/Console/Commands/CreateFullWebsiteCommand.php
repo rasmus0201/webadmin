@@ -57,11 +57,20 @@ class CreateFullWebsiteCommand extends Command
             'database' => $dbName
         ]);
 
+        $env = [
+            'DB_HOST' => '127.0.0.1',
+            'DB_PORT' => '3306',
+            'DB_DATABASE' => $dbName,
+            'DB_USERNAME' => $dbUsername,
+            'DB_PASSWORD' => $dbPassword
+        ];
+
         $this->call('website:make', [
             '--secure' => true,
             '--email' => $this->argument('email'),
             '--template' => app_path('Websites/Nginx/Templates/NewSecureWebsite.stub'),
-            '--domain' => $this->argument('domain')
+            '--domain' => $this->argument('domain'),
+            '--env' => http_build_query($env, '', "\n")
         ]);
     }
 }
