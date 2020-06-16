@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Databases\Commands\CreateDatabaseUserCommand;
+use App\Databases\Sluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -39,11 +39,8 @@ class CreateFullWebsiteCommand extends Command
      */
     public function handle()
     {
-        $dbName = Str::slug($this->argument('domain'), '_');
-        $dbUsername = Str::limit(
-            Str::slug($this->argument('domain'), '_'),
-            CreateDatabaseUserCommand::USERNAME_LIMIT
-        );
+        $dbUsername = Sluggifier::username($this->argument('username'));
+        $dbName = Sluggifier::database($this->argument('database'));
         $dbPassword = Str::random(16);
 
         $this->call('db:create-database', [

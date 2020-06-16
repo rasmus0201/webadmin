@@ -2,6 +2,7 @@
 
 namespace App\Databases\Commands;
 
+use App\Databases\Sluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Str;
@@ -39,7 +40,7 @@ class CreateDatabaseCommand extends Command
      */
     public function handle(DB $db)
     {
-        $name = Str::slug($this->argument('name'), '_');
+        $name = Sluggifier::database($this->argument('name'));
 
         $ret = $db->connection('webadmin')->statement(
             "CREATE DATABASE `$name`"

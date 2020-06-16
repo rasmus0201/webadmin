@@ -2,6 +2,7 @@
 
 namespace App\Databases\Commands;
 
+use App\Databases\Sluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class CreateDatabaseUserCommand extends Command
      */
     public function handle(DB $db)
     {
-        $username = Str::limit(Str::slug($this->argument('username'), '_'), self::USERNAME_LIMIT);
+        $username = Sluggifier::username($this->argument('username'));
         $password = $this->argument('password');
 
         $ret = $db->connection('webadmin')->statement(

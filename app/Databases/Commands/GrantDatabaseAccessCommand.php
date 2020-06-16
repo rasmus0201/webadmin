@@ -2,6 +2,7 @@
 
 namespace App\Databases\Commands;
 
+use App\Databases\Sluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Str;
@@ -39,11 +40,8 @@ class GrantDatabaseAccessCommand extends Command
      */
     public function handle(DB $db)
     {
-        $username = Str::limit(
-            Str::slug($this->argument('username'), '_'),
-            CreateDatabaseUserCommand::USERNAME_LIMIT
-        );
-        $database = Str::slug($this->argument('database'), '_');
+        $username = Sluggifier::username($this->argument('username'));
+        $database = Sluggifier::database($this->argument('database'));
 
         $ret1 = $db->connection('webadmin')->statement(
             "GRANT ALL PRIVILEGES ON $database.* TO '$username'@'localhost'"
