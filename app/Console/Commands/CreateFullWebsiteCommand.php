@@ -64,7 +64,7 @@ class CreateFullWebsiteCommand extends Command
             '--secure' => true,
             '--email' => $this->argument('email'),
             '--template' => app_path('Websites/Nginx/Templates/NewSecureWebsite.stub'),
-            '--domain' => $this->argument($domain)
+            '--domain' => $this->argument('domain')
         ]);
     }
 }
