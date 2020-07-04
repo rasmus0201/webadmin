@@ -518,38 +518,38 @@ class Parser extends DirectiveCollection implements ConfigParserContract
     }
 
     /**
-     * Creates a new instance of the Config class from file path.
+     * Creates a new instance of the Parser class from file path.
      *
      * @param string $path The path to config file.
      *
-     * @return Config
+     * @return Parser
      */
     public static function createFromFile($path)
     {
-        return new Config($path);
+        return new Parser($path);
     }
 
     /**
-     * Creates a new instance of the Config class from string value.
+     * Creates a new instance of the Parser class from string value.
      *
      * @param string $content The config file data.
      *
-     * @return Config
+     * @return Parser
      */
     public static function createFromString($content)
     {
-        $result = new Config();
+        $result = new Parser();
         $result->parseString($content);
         return $result;
     }
 
     /**
-     * Creates a new instance of the Config class.
+     * Creates a new instance of the Parser class.
      *
-     * @return Config
+     * @return Parser
      */
     public static function create()
     {
-        return new Config();
+        return new Parser();
     }
 }
