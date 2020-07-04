@@ -5,7 +5,7 @@ namespace App\Builders;
 use App\Parsers\Template\Parser as TemplateParser;
 use App\Contracts\ConfigParserContract;
 use App\Contracts\WebserverContract;
-use App\Parsers\Nginx as NginxParser;
+use App\Parsers\Nginx\Parser as NginxParser;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
