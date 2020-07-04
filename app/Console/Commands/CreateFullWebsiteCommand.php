@@ -68,7 +68,7 @@ class CreateFullWebsiteCommand extends Command
         $this->call('website:make', [
             '--secure' => true,
             '--email' => $this->argument('email'),
-            '--template' => storage_path('templates/NewSecureWebsite.tmpl'),
+            '--template' => storage_path('app/templates/NewSecureWebsite.tmpl'),
             '--domain' => $this->argument('domain'),
             '--env' => http_build_query($env, '', "\n") . PHP_EOL
         ]);
