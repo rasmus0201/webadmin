@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Ap\Contracts\WebserverContract;
+use App\Contracts\WebserverContract;
 use App\Builders\Nginx;
 use Illuminate\Console\Command;
 
