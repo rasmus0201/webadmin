@@ -53,6 +53,18 @@ export default new Router({
             beforeEnter: authGuard
         },
         {
+            path: '/backup/databases',
+            component: () => import('../views/backup/Databases'),
+            name: 'backup.databases.index',
+            beforeEnter: authGuard
+        },
+        {
+            path: '/backup/websites',
+            component: () => import('../views/backup/Websites'),
+            name: 'backup.websites.index',
+            beforeEnter: authGuard
+        },
+        {
             path: '*',
             component: () => import('../views/NotFound'),
             name: 'not-found'

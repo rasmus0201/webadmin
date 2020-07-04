@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sudo -u www-data -g www-data git -c core.sshCommand="ssh -i /home/www-data/.ssh/id_rsa" pull
+sudo find ./* -type d -exec chmod 775 {} +
+sudo find ./* -type f -exec chmod 664 {} +
+sudo chown -R www-data:www-data ./*
+sudo chown root:root ./bin/webserver_manager
+sudo chmod 4511 ./bin/webserver_manager
+sudo chown root:root ./bin/certbot_manager
+sudo chmod 4511 ./bin/certbot_manager

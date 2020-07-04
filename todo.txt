@@ -22,11 +22,13 @@
 
 7. Backup website & databases
 
-8. (ftp users?)
+Refactors:
+- Use https://symfony.com/doc/current/components/filesystem.html
+- Use https://symfony.com/doc/current/components/process.html
+- Create seperate users for each website. This will also allow FPT access
 
 
-Use https://symfony.com/doc/current/components/filesystem.html
-Use https://symfony.com/doc/current/components/process.html
+
 
 NOTE:
 ./certbot_manager certonly \
