@@ -1,28 +1,27 @@
 <?php
 
-namespace App\Databases\Commands;
+namespace App\Console\Commands;
 
-use App\Databases\Sluggifier;
+use App\Helpers\DatabaseSluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Str;
 
-class CreateDatabaseUserCommand extends Command
+class GrantDatabaseAccessCommand extends Command
 {
-    const USERNAME_LIMIT = 24;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:create-user {username} {password}';
+    protected $signature = 'db:grant-access {username} {database}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create new database user';
+    protected $description = 'Grant access to a user to a database';
 
     /**
      * Create a new command instance.
@@ -41,14 +40,16 @@ class CreateDatabaseUserCommand extends Command
      */
     public function handle(DB $db)
     {
-        $username = Sluggifier::username($this->argument('username'));
-        $password = $this->argument('password');
+        $username = DatabaseSluggifier::username($this->argument('username'));
+        $database = DatabaseSluggifier::database($this->argument('database'));
 
-        $ret = $db->connection('webadmin')->statement(
-            "CREATE USER '$username'@'localhost' IDENTIFIED BY '$password'"
+        $ret1 = $db->connection('webadmin')->statement(
+            "GRANT ALL PRIVILEGES ON $database.* TO '$username'@'localhost'"
         );
 
-        if (!$ret) {
+        $ret2 = $db->connection('webadmin')->statement("FLUSH PRIVILEGES");
+
+        if (!$ret1 || !$ret2) {
             throw new \Exception('Something went wrong on database user creation');
         }
     }

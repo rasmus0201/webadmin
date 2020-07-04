@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Websites\Nginx;
+namespace App\Builders;
 
-use App\TemplateEngine\Parser as TemplateParser;
-use App\Websites\Contracts\ConfigParserContract;
-use App\Websites\Contracts\WebserverContract;
-use App\Websites\Nginx\ConfigParser\Config;
+use App\Parsers\Template\Parser as TemplateParser;
+use App\Contracts\ConfigParserContract;
+use App\Contracts\WebserverContract;
+use App\Parsers\Nginx as NginxParser;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -59,7 +59,7 @@ class Nginx implements WebserverContract
             throw new \RuntimeException("webserver_manager failed linking: '$lastLine'");
         }
 
-        return Config::createFromString($parser->asString());
+        return NginxParser::createFromString($parser->asString());
     }
 
     public function deleteVirtualHost($name, ConfigParserContract $vHost)
@@ -137,7 +137,7 @@ class Nginx implements WebserverContract
             throw new \RuntimeException("webserver_manager failed creating: '$lastLine'");
         }
 
-        return Config::createFromString($parser->asString());
+        return NginxParser::createFromString($parser->asString());
     }
 
     public function getWebsiteConfigPath($domain)

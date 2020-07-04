@@ -1,5 +1,5 @@
 <?php
-namespace App\Websites\Nginx\ConfigParser;
+namespace App\Parsers\Nginx;
 
 class DirectiveType
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Websites\Contracts;
+namespace App\Contracts;
 
 interface ConfigParserContract
 {

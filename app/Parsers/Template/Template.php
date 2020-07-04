@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TemplateEngine;
+namespace App\Parsers\Template;
 
 class Template
 {

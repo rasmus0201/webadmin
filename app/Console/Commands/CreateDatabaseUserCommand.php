@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Databases\Commands;
+namespace App\Console\Commands;
 
-use App\Databases\Sluggifier;
+use App\Helpers\DatabaseSluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager as DB;
 use Illuminate\Support\Str;
 
-class CreateDatabaseCommand extends Command
+class CreateDatabaseUserCommand extends Command
 {
+    const USERNAME_LIMIT = 24;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:create-database {name}';
+    protected $signature = 'db:create-user {username} {password}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create new database';
+    protected $description = 'Create new database user';
 
     /**
      * Create a new command instance.
@@ -40,14 +41,15 @@ class CreateDatabaseCommand extends Command
      */
     public function handle(DB $db)
     {
-        $name = Sluggifier::database($this->argument('name'));
+        $username = DatabaseSluggifier::username($this->argument('username'));
+        $password = $this->argument('password');
 
         $ret = $db->connection('webadmin')->statement(
-            "CREATE DATABASE `$name`"
+            "CREATE USER '$username'@'localhost' IDENTIFIED BY '$password'"
         );
 
         if (!$ret) {
-            throw new \Exception('Something went wrong on database creation');
+            throw new \Exception('Something went wrong on database user creation');
         }
     }
 }

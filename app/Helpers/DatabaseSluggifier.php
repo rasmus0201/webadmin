@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Databases;
+namespace App\Helpers;
 
 use Illuminate\Support\Str;
 
-class Sluggifier
+class DatabaseSluggifier
 {
     const DATABASE_LIMIT = 24;
     const USERNAME_LIMIT = 16;

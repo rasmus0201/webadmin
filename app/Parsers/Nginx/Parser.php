@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Websites\Nginx\ConfigParser;
+namespace App\Parsers\Nginx;
 
-use App\Websites\Contracts\ConfigParserContract;
+use App\Contracts\ConfigParserContract;
 
-class Config extends DirectiveCollection implements ConfigParserContract
+class Parser extends DirectiveCollection implements ConfigParserContract
 {
     /**
      * Path to parse from

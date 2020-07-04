@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Databases\Sluggifier;
+use App\Helpers\DatabaseSluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -39,8 +39,8 @@ class CreateFullWebsiteCommand extends Command
      */
     public function handle()
     {
-        $dbUsername = Sluggifier::username($this->argument('domain'));
-        $dbName = Sluggifier::database($this->argument('domain'));
+        $dbUsername = DatabaseSluggifier::username($this->argument('domain'));
+        $dbName = DatabaseSluggifier::database($this->argument('domain'));
         $dbPassword = Str::random(16);
 
         $this->call('db:create-database', [
@@ -65,18 +65,10 @@ class CreateFullWebsiteCommand extends Command
             'DB_PASSWORD' => $dbPassword
         ];
 
-        $env = [
-            'DB_HOST' => '127.0.0.1',
-            'DB_PORT' => '3306',
-            'DB_USERNAME' => $dbUsername,
-            'DB_DATABASE' => $dbName,
-            'DB_PASSWORD' => $dbPassword
-        ];
-
         $this->call('website:make', [
             '--secure' => true,
             '--email' => $this->argument('email'),
-            '--template' => app_path('Websites/Nginx/Templates/NewSecureWebsite.stub'),
+            '--template' => storage_path('templates/NewSecureWebsite.tmpl'),
             '--domain' => $this->argument('domain'),
             '--env' => http_build_query($env, '', "\n") . PHP_EOL
         ]);

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Websites\Commands;
+namespace App\Console\Commands;
 
-use App\Websites\Contracts\WebserverContract;
-use App\Websites\Nginx\Nginx;
+use Ap\Contracts\WebserverContract;
+use App\Builders\Nginx;
 use Illuminate\Console\Command;
 
 class CreateWebsiteCommand extends Command
@@ -14,11 +14,11 @@ class CreateWebsiteCommand extends Command
      * @var string
      */
     protected $signature = 'website:make
-                        {--driver=nginx}
+                        {--server=nginx}
                         {--secure : Whether or not too generate SSL certifcate & config}
                         {--email= : Email for registering with external services}
                         {--domain= : The domain of the website}
-                        {--template= : Template to the driver}
+                        {--template= : Template to the server}
                         {--git-repository= : From which git repository to install from}
                         {--git-branch=master: The branch to checkout}
                         {--env= : The .env file contents}';
@@ -31,11 +31,11 @@ class CreateWebsiteCommand extends Command
     protected $description = 'Make new website';
 
     /**
-     * Drivers with their class
+     * Servers with their class
      *
      * @var array
      */
-    private $drivers = [
+    private $servers = [
         'nginx' => Nginx::class
     ];
 
@@ -56,10 +56,10 @@ class CreateWebsiteCommand extends Command
      */
     public function handle()
     {
-        $driver = $this->option('driver');
+        $server = $this->option('server');
 
-        if (!isset($this->drivers[$driver])) {
-            throw new \RuntimeException("Driver [$driver] not supported.");
+        if (!isset($this->servers[$server])) {
+            throw new \RuntimeException("Server [$server] not supported.");
         }
 
         $domain = $this->option('domain');
@@ -70,7 +70,7 @@ class CreateWebsiteCommand extends Command
             throw new \RuntimeException("Both --domain, --template and --email is required.");
         }
 
-        $webserver = new $this->drivers[$driver]();
+        $webserver = new $this->servers[$server]();
 
         // Before doing anything, make sure the webserver
         // is functioning normally
