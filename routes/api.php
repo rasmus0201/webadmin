@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,8 +26,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->group(function() {
         Route::get('user/me', 'UserController@index');
 
-        Route::apiResource('database-users', 'DatabaseUserController');
         Route::apiResource('databases', 'DatabaseController');
+        Route::apiResource('databaseUsers', 'DatabaseUserController');
+        Route::apiResource('databaseUsers.privileges', 'DatabasePrivilegesController');
         Route::apiResource('websites', 'WebsiteController');
         Route::apiResource('backup/databases', 'DatabaseBackupController');
         Route::apiResource('backup/website', 'WebsiteBackupController');

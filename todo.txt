@@ -25,8 +25,9 @@
 Refactors:
 - Use https://symfony.com/doc/current/components/filesystem.html
 - Use https://symfony.com/doc/current/components/process.html
-- Create seperate users for each website. This will also allow FPT access
+- Create seperate users for each website. This will also allow FTP access
 
+- Cpanel inspiration: https://documentation.cpanel.net/display/DD/UAPI+Functions+-+Mysql%3A%3Arename_user
 
 
 

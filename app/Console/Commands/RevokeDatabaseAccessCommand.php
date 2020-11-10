@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Services\DatabaseService;
 use Illuminate\Console\Command;
 
-class CreateDatabaseUserCommand extends Command
+class RevokeDatabaseAccessCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'webadmin:db:create-user {username} {password} {--host=localhost : The host for the user}';
+    protected $signature = 'webadmin:db:revoke-access {username} {database} {--P|--privileges=* : Privileges for user on db. Defaults to "ALL PRIVILEGES"} {--host=localhost : The host for the user}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create new database user';
+    protected $description = 'Revoke access from a user to a database';
 
     /**
      * Create a new command instance.
@@ -39,13 +39,16 @@ class CreateDatabaseUserCommand extends Command
     public function handle(DatabaseService $databaseService)
     {
         try {
-            $result = $databaseService->createUser(
+            $revokedPrivileges = $databaseService->revokePrivilegesOnDatabase(
                 $this->argument('username'),
                 $this->option('host'),
-                $this->argument('password')
+                $this->argument('database'),
+                !empty($this->option('privileges')) ? $this->option('privileges') : ['ALL PRIVILEGES']
             );
 
-            $this->info("User '{$result['username']}@{$result['host']}' was created");
+            $privilegesStr = implode(', ', $revokedPrivileges);
+
+            $this->line("Revoked the follwing privileges: $privilegesStr");
         } catch (\Throwable $th) {
             $this->error($th->getMessage());
         }

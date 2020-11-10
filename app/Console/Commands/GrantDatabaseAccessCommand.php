@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\DatabaseSluggifier;
+use App\Services\DatabaseService;
 use Illuminate\Console\Command;
-use Illuminate\Database\DatabaseManager as DB;
-use Illuminate\Support\Str;
 
 class GrantDatabaseAccessCommand extends Command
 {
@@ -14,7 +12,7 @@ class GrantDatabaseAccessCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'db:grant-access {username} {database}';
+    protected $signature = 'webadmin:db:grant-access {username} {database} {--P|--privileges=* : Privileges for user on db. Defaults to "ALL PRIVILEGES"} {--host=localhost : The host for the user}';
 
     /**
      * The console command description.
@@ -38,19 +36,21 @@ class GrantDatabaseAccessCommand extends Command
      *
      * @return mixed
      */
-    public function handle(DB $db)
+    public function handle(DatabaseService $databaseService)
     {
-        $username = DatabaseSluggifier::username($this->argument('username'));
-        $database = DatabaseSluggifier::database($this->argument('database'));
+        try {
+            $grantedPrivileges = $databaseService->setPrivilegesOnDatabase(
+                $this->argument('username'),
+                $this->option('host'),
+                $this->argument('database'),
+                !empty($this->option('privileges')) ? $this->option('privileges') : ['ALL PRIVILEGES']
+            );
 
-        $ret1 = $db->connection('webadmin')->statement(
-            "GRANT ALL PRIVILEGES ON $database.* TO '$username'@'localhost'"
-        );
+            $privilegesStr = implode(', ', $grantedPrivileges);
 
-        $ret2 = $db->connection('webadmin')->statement("FLUSH PRIVILEGES");
-
-        if (!$ret1 || !$ret2) {
-            throw new \Exception('Something went wrong on database user creation');
+            $this->line("Granted the follwing privileges: $privilegesStr");
+        } catch (\Throwable $th) {
+            $this->error($th->getMessage());
         }
     }
 }

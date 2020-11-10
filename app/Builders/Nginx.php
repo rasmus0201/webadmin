@@ -2,10 +2,10 @@
 
 namespace App\Builders;
 
-use App\Parsers\Template\Parser as TemplateParser;
 use App\Contracts\ConfigParserContract;
 use App\Contracts\WebserverContract;
 use App\Parsers\Nginx\Parser as NginxParser;
+use App\Parsers\Template\Parser as TemplateParser;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -23,7 +23,8 @@ class Nginx implements WebserverContract
 
         // Save to tmp first
         if (!$parser->asFile($tmpLocation)) {
-            return;
+            Log::error($err = 'Could not save temporary file');
+            throw new \RuntimeException($err);
         }
 
         // Create in /etc/nginx/sites-available/$name.conf
@@ -117,7 +118,8 @@ class Nginx implements WebserverContract
 
         // Save to tmp first
         if (!$parser->asFile($tmpLocation)) {
-            return;
+            Log::error($err = 'Could not save temporary file');
+            throw new \RuntimeException($err);
         }
 
         // Create in /etc/nginx/snippets/$name.conf

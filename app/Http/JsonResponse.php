@@ -32,7 +32,7 @@ class JsonResponse
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function error(array $data = [], $message = 'Error', $status = 400, array $headers = [])
+    public static function error(array $data = [], $message = 'Error', $status = 422, array $headers = [])
     {
         return response()->json([
             'success' => false,

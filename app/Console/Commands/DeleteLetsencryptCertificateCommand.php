@@ -12,7 +12,7 @@ class DeleteLetsencryptCertificateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'letsencrypt:delete {domain}';
+    protected $signature = 'webadmin:letsencrypt:delete {domain}';
 
     /**
      * The console command description.

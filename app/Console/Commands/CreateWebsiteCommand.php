@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Contracts\WebserverContract;
 use App\Builders\Nginx;
+use App\Contracts\WebserverContract;
 use Illuminate\Console\Command;
 
 class CreateWebsiteCommand extends Command
@@ -13,7 +13,7 @@ class CreateWebsiteCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'website:make
+    protected $signature = 'webadmin:website:make
                         {--server=nginx}
                         {--secure : Whether or not too generate SSL certifcate & config}
                         {--email= : Email for registering with external services}
@@ -67,9 +67,10 @@ class CreateWebsiteCommand extends Command
         $email = $this->option('email');
 
         if (empty($domain) || empty($template) || empty($email)) {
-            throw new \RuntimeException("Both --domain, --template and --email is required.");
+            throw new \RuntimeException("Both --domain, --template and --email are required.");
         }
 
+        /** @var \App\Contracts\WebserverContract **/
         $webserver = new $this->servers[$server]();
 
         // Before doing anything, make sure the webserver
@@ -90,9 +91,9 @@ class CreateWebsiteCommand extends Command
 
         // Genereate SSL certicate & save it
         if ($this->option('secure')) {
-            $this->call('letsencrypt:create', [
+            $this->call('webadmin:letsencrypt:create', [
                 'domain' => $domain,
-                '--email' => $email
+                'email' => $email
             ]);
         }
 

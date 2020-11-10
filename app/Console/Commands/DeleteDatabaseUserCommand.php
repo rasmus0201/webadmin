@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Services\DatabaseService;
 use Illuminate\Console\Command;
 
-class CreateDatabaseCommand extends Command
+class DeleteDatabaseUserCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'webadmin:db:create-database {name}';
+    protected $signature = 'webadmin:db:delete-user {username} {--host=localhost : The host for the user}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create new database';
+    protected $description = 'Delete a database user';
 
     /**
      * Create a new command instance.
@@ -39,11 +39,12 @@ class CreateDatabaseCommand extends Command
     public function handle(DatabaseService $databaseService)
     {
         try {
-            $result = $databaseService->createDatabase(
-                $this->argument('name')
+            $result = $databaseService->deleteUser(
+                $this->argument('username'),
+                $this->option('host')
             );
 
-            $this->info("Database '{$result['database']}' was created");
+            $this->info("User '{$result['username']}@{$result['host']}' was deleted");
         } catch (\Throwable $th) {
             $this->error($th->getMessage());
         }

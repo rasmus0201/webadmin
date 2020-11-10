@@ -6,8 +6,8 @@ use Illuminate\Support\Str;
 
 class DatabaseSluggifier
 {
-    const DATABASE_LIMIT = 24;
-    const USERNAME_LIMIT = 16;
+    const DATABASE_LIMIT = 32;
+    const USERNAME_LIMIT = 32;
 
     public static function username($str)
     {

@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\DatabaseSluggifier;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
-class CreateFullWebsiteCommand extends Command
+class CreatePlainWebsiteCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'webadmin:new-plain {domain} {email}';
+    protected $signature = 'webadmin:website:plain {domain} {email}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create new plain website with vhost and database';
+    protected $description = 'Create new "plain"/empty website with Domain, SSL and database setup';
 
     /**
      * Create a new command instance.
@@ -39,20 +38,20 @@ class CreateFullWebsiteCommand extends Command
      */
     public function handle()
     {
-        $dbUsername = DatabaseSluggifier::username($this->argument('domain'));
-        $dbName = DatabaseSluggifier::database($this->argument('domain'));
+        $dbUsername = $this->argument('domain');
+        $dbName = $this->argument('domain');
         $dbPassword = Str::random(16);
 
-        $this->call('db:create-database', [
+        $this->call('webadmin:db:create-database', [
             'name' => $dbName,
         ]);
 
-        $this->call('db:create-user', [
+        $this->call('webadmin:db:create-user', [
             'username' => $dbUsername,
             'password' => $dbPassword
         ]);
 
-        $this->call('db:grant-access', [
+        $this->call('webadmin:db:grant-access', [
             'username' => $dbUsername,
             'database' => $dbName
         ]);
@@ -65,7 +64,7 @@ class CreateFullWebsiteCommand extends Command
             'DB_PASSWORD' => $dbPassword
         ];
 
-        $this->call('website:make', [
+        $this->call('webadmin:website:make', [
             '--secure' => true,
             '--email' => $this->argument('email'),
             '--template' => storage_path('app/templates/NewSecureWebsite.tmpl'),
