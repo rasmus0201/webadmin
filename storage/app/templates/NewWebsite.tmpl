@@ -6,7 +6,7 @@ server {
     server_name {{ DOMAIN }};
     root /var/www/{{ DOMAIN }}/public;
 
-    # Redirect HTTPS www to HTTPS non-www
+    # Redirect  www to non-www
     if ($host = www.{{ DOMAIN }}) {
         return 301 http://{{ DOMAIN }}$request_uri;
     }
