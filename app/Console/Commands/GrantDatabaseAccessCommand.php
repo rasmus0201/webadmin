@@ -48,7 +48,7 @@ class GrantDatabaseAccessCommand extends Command
 
             $privilegesStr = implode(', ', $grantedPrivileges);
 
-            $this->line("Granted the follwing privileges: $privilegesStr");
+            $this->line("Granted the following privileges: $privilegesStr");
         } catch (\Throwable $th) {
             $this->error($th->getMessage());
         }

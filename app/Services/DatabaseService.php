@@ -90,14 +90,6 @@ class DatabaseService
 
     public function getUserInfo($user, $defaultHost = 'localhost')
     {
-        $databases = $this->db->table('mysql.db', 'd')
-            ->select([
-                'd.Db',
-            ])
-            ->where('d.User', $user)
-            ->where('d.Host', $defaultHost)
-            ->pluck('Db');
-
         $info = $this->db->table('mysql.user', 'u')
             ->select([
                 'u.User as user',
@@ -123,7 +115,7 @@ class DatabaseService
             ->where('u.Host', $defaultHost)
             ->first();
 
-        $info->databases = $databases;
+        $info->databases = $this->listDatabasesByUser($user, $defaultHost);
 
         return collect($info);
     }
@@ -183,6 +175,18 @@ class DatabaseService
             ->where('password_expired', 'N')
             ->get()
             ->toArray();
+    }
+
+    public function listDatabasesByUser($user, $defaultHost = 'localhost')
+    {
+        return $this->db->table('mysql.db', 'd')
+            ->join('information_schema.schemata as s', 's.SCHEMA_NAME', '=', 'd.Db')
+            ->select([
+                'd.Db',
+            ])
+            ->where('d.User', $user)
+            ->where('d.Host', $defaultHost)
+            ->pluck('Db');
     }
 
     public function databaseExists($name)

@@ -48,7 +48,7 @@ class RevokeDatabaseAccessCommand extends Command
 
             $privilegesStr = implode(', ', $revokedPrivileges);
 
-            $this->line("Revoked the follwing privileges: $privilegesStr");
+            $this->line("Revoked the following privileges: $privilegesStr");
         } catch (\Throwable $th) {
             $this->error($th->getMessage());
         }

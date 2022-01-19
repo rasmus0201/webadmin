@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 
 class DatabasePrivilegesController extends Controller
 {
+    /**
+     * @var DatabaseService
+     */
+    private $databaseService;
+
+    /**
+     * Constructor
+     *
+     * @param DatabaseService $databaseService
+     */
     public function __construct(DatabaseService $databaseService)
     {
         $this->databaseService = $databaseService;
@@ -20,15 +30,23 @@ class DatabasePrivilegesController extends Controller
      */
     public function index(Request $request, $databaseUser)
     {
+        if (!$this->databaseService->userExists($databaseUser)) {
+            return JsonResponse::error([], 'Not found', 404);
+        }
+
         $userParts = $this->databaseService->getUserParts($databaseUser);
+        $databaseNames = $this->databaseService->listDatabasesByUser($userParts['username'], $userParts['host']);
 
-        $privileges = $this->databaseService->getPrivilegesOnDatabase(
-            $userParts['username'],
-            $userParts['host'],
-            'webadmin'
-        );
+        $databases = [];
+        foreach ($databaseNames as $databaseName) {
+            $databases[$databaseName] = $this->databaseService->getPrivilegesOnDatabase(
+                $userParts['username'],
+                $userParts['host'],
+                $databaseName
+            );
+        }
 
-        return JsonResponse::success($privileges);
+        return JsonResponse::success($databases);
     }
 
     /**
@@ -37,9 +55,11 @@ class DatabasePrivilegesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $databaseUser)
     {
-        //
+        if (!$this->databaseService->userExists($databaseUser)) {
+            return JsonResponse::error([], 'Not found', 404);
+        }
     }
 
     /**
@@ -48,9 +68,11 @@ class DatabasePrivilegesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $databaseUser, $name)
     {
-        //
+        if (!$this->databaseService->userExists($databaseUser)) {
+            return JsonResponse::error([], 'Not found', 404);
+        }
     }
 
     /**
@@ -60,9 +82,11 @@ class DatabasePrivilegesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $databaseUser, $name)
     {
-        //
+        if (!$this->databaseService->userExists($databaseUser)) {
+            return JsonResponse::error([], 'Not found', 404);
+        }
     }
 
     /**
@@ -71,8 +95,10 @@ class DatabasePrivilegesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $databaseUser, $name)
     {
-        //
+        if (!$this->databaseService->userExists($databaseUser)) {
+            return JsonResponse::error([], 'Not found', 404);
+        }
     }
 }
